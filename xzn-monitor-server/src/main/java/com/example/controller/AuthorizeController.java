@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import java.io.IOException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,25 @@ public class AuthorizeController {
 
     @Resource
     AccountService accountService;
-
+    @PostMapping("/login")
+    @Operation(summary = "用户登录")
+    public RestBean<Void> login(@RequestParam String username,
+                                @RequestParam String password,
+                                HttpServletRequest request){
+        //return this.messageHandle(() -> accountService.login(username, password, request));
+        return RestBean.success();
+    }
+    /**
+     * 退出登录处理，将对应的Jwt令牌列入黑名单不再使用
+     * @param request 请求
+     * @param response 响应
+     * @throws IOException 可能的异常
+     */
+    @GetMapping("/logout")
+    @Operation(summary = "退出登录")
+    public RestBean<String> logout(HttpServletRequest request, HttpServletResponse response){
+        return accountService.logout(request, response) ? RestBean.success("退出登录成功") : RestBean.failure(400, "退出登录失败");
+    }
     /**
      * 请求邮件验证码
      * @param email 请求邮件

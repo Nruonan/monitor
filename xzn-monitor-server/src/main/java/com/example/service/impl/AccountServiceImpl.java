@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.entity.RestBean;
 import com.example.entity.dto.AccountDO;
 import com.example.entity.vo.request.ConfirmResetReq;
 import com.example.entity.vo.request.EmailResetReq;
@@ -8,7 +9,10 @@ import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
 import com.example.utils.FlowUtils;
+import com.example.utils.JwtUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +46,16 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
 
     @Resource
     FlowUtils flow;
+    @Resource
+    JwtUtils jwtUtils;
+    @Override
+    public Boolean logout(HttpServletRequest request, HttpServletResponse response) {
+        String authorization = request.getHeader("Authorization");
+        if(jwtUtils.invalidateJwt(authorization)) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 从数据库中通过用户名或邮箱查找用户详细信息

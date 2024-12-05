@@ -64,10 +64,7 @@ public class SecurityConfiguration {
                         .successHandler(this::handleProcess)
                         .permitAll()
                 )
-                .logout(conf -> conf
-                        .logoutUrl("/api/auth/logout")
-                        .logoutSuccessHandler(this::onLogoutSuccess)
-                )
+                .logout(AbstractHttpConfigurer::disable)
                 .exceptionHandling(conf -> conf
                         .accessDeniedHandler(this::handleProcess)
                         .authenticationEntryPoint(this::handleProcess)
