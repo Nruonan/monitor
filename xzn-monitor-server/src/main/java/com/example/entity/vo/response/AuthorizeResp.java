@@ -8,7 +8,7 @@ import java.util.Date;
  * 登录验证成功的用户信息响应
  */
 @Data
-public class AuthorizeVO {
+public class AuthorizeResp {
     String username;
     String role;
     String token;

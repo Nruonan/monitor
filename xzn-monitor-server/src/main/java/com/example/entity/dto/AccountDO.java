@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @TableName("db_account")
 @AllArgsConstructor
-public class Account implements BaseData {
+public class AccountDO implements BaseData {
     @TableId(type = IdType.AUTO)
     Integer id;
     String username;

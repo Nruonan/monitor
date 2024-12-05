@@ -1,9 +1,9 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.dto.Account;
-import com.example.entity.vo.request.ConfirmResetVO;
-import com.example.entity.vo.request.EmailResetVO;
+import com.example.entity.dto.AccountDO;
+import com.example.entity.vo.request.ConfirmResetReq;
+import com.example.entity.vo.request.EmailResetReq;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
  * 账户信息处理相关服务
  */
 @Service
-public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements AccountService {
+public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> implements AccountService {
 
     //验证邮件发送冷却时间限制，秒为单位
     @Value("${spring.web.verify.mail-limit}")
@@ -51,13 +51,13 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = this.findAccountByNameOrEmail(username);
-        if(account == null)
+        AccountDO accountDO = this.findAccountByNameOrEmail(username);
+        if(accountDO == null)
             throw new UsernameNotFoundException("用户名或密码错误");
         return User
                 .withUsername(username)
-                .password(account.getPassword())
-                .roles(account.getRole())
+                .password(accountDO.getPassword())
+                .roles(accountDO.getRole())
                 .build();
     }
 
@@ -89,8 +89,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String resetEmailAccountPassword(EmailResetVO info) {
-        String verify = resetConfirm(new ConfirmResetVO(info.getEmail(), info.getCode()));
+    public String resetEmailAccountPassword(EmailResetReq info) {
+        String verify = resetConfirm(new ConfirmResetReq(info.getEmail(), info.getCode()));
         if(verify != null) return verify;
         String email = info.getEmail();
         String password = passwordEncoder.encode(info.getPassword());
@@ -107,7 +107,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String resetConfirm(ConfirmResetVO info) {
+    public String resetConfirm(ConfirmResetReq info) {
         String email = info.getEmail();
         String code = this.getEmailVerifyCode(email);
         if(code == null) return "请先获取验证码";
@@ -150,7 +150,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
      * @return 账户实体
      */
     @Override
-    public Account findAccountByNameOrEmail(String text){
+    public AccountDO findAccountByNameOrEmail(String text){
         return this.query()
                 .eq("username", text).or()
                 .eq("email", text)

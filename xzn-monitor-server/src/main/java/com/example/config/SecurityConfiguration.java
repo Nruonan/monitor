@@ -1,8 +1,8 @@
 package com.example.config;
 
 import com.example.entity.RestBean;
-import com.example.entity.dto.Account;
-import com.example.entity.vo.response.AuthorizeVO;
+import com.example.entity.dto.AccountDO;
+import com.example.entity.vo.response.AuthorizeResp;
 import com.example.filter.JwtAuthenticationFilter;
 import com.example.filter.RequestLogFilter;
 import com.example.service.AccountService;
@@ -102,12 +102,12 @@ public class SecurityConfiguration {
                     .unauthorized(exception.getMessage()).asJsonString());
         } else if(exceptionOrAuthentication instanceof Authentication authentication){
             User user = (User) authentication.getPrincipal();
-            Account account = service.findAccountByNameOrEmail(user.getUsername());
-            String jwt = utils.createJwt(user, account.getUsername(), account.getId());
+            AccountDO accountDO = service.findAccountByNameOrEmail(user.getUsername());
+            String jwt = utils.createJwt(user, accountDO.getUsername(), accountDO.getId());
             if(jwt == null) {
                 writer.write(RestBean.forbidden("登录验证频繁，请稍后再试").asJsonString());
             } else {
-                AuthorizeVO vo = account.asViewObject(AuthorizeVO.class, o -> o.setToken(jwt));
+                AuthorizeResp vo = accountDO.asViewObject(AuthorizeResp.class, o -> o.setToken(jwt));
                 vo.setExpire(utils.expireTime());
                 writer.write(RestBean.success(vo).asJsonString());
             }

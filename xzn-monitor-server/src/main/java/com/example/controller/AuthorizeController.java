@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.entity.RestBean;
-import com.example.entity.vo.request.ConfirmResetVO;
-import com.example.entity.vo.request.EmailResetVO;
+import com.example.entity.vo.request.ConfirmResetReq;
+import com.example.entity.vo.request.EmailResetReq;
 import com.example.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,7 +53,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-confirm")
     @Operation(summary = "密码重置确认")
-    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetVO vo){
+    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetReq vo){
         return this.messageHandle(() -> accountService.resetConfirm(vo));
     }
 
@@ -64,7 +64,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-password")
     @Operation(summary = "密码重置操作")
-    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetVO vo){
+    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetReq vo){
         return this.messageHandle(() ->
                 accountService.resetEmailAccountPassword(vo));
     }
