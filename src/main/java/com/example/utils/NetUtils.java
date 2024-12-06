@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.example.entity.BaseDetail;
 import com.example.entity.ConnectionConfig;
 import com.example.entity.Response;
+import com.example.entity.RuntimeDetail;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.net.URI;
@@ -102,6 +103,23 @@ public class NetUtils {
         // 发送HTTP POST请求到服务器，请求路径为"/detail"，携带参数为当前系统基本信息对象
         Response response = this.doPost("/detail", detail);
         
+        // 根据服务器返回的响应结果，判断更新操作是否成功
+        if (response.success()){
+            // 如果响应表示操作成功，则记录日志信息，表明系统基本信息已成功更新
+            log.info("系统基本信息已更新完成");
+        }else{
+            // 如果响应表示操作失败，则记录错误日志，包含失败的原因信息
+            log.error("系统更新原因更新失败：{}",response.message());
+        }
+    }
+    /**
+     * 更新系统实时数据信息
+     * @param detail 要更新的系统实时数据对象
+     */
+    public void updateRuntimeDetails(RuntimeDetail detail){
+        // 发送HTTP POST请求到服务器，请求路径为"/runtime"，携带参数为当前系统基本信息对象
+        Response response = this.doPost("/runtime", detail);
+
         // 根据服务器返回的响应结果，判断更新操作是否成功
         if (response.success()){
             // 如果响应表示操作成功，则记录日志信息，表明系统基本信息已成功更新

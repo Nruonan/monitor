@@ -44,7 +44,7 @@ public class MonitorUtils {
             .cpuCore(hardware.getProcessor().getLogicalProcessorCount())
             .memory(memory)
             .disk(diskSize)
-            .ip(ip)
+            .ip("192.168.56.1")
             .build();
     }
     public RuntimeDetail monitorRuntimeDetail(){
@@ -55,6 +55,7 @@ public class MonitorUtils {
              CentralProcessor processor = hardware.getProcessor();
              double upload = ni.getBytesSent();
              double download = ni.getBytesRecv();
+             System.out.println(download);
              double read = hardware.getDiskStores().stream().mapToLong(HWDiskStore::getReadBytes).sum();
              double write = hardware.getDiskStores().stream().mapToLong(HWDiskStore::getWriteBytes).sum();
              long[] systemCpuLoadTicks = processor.getSystemCpuLoadTicks();
@@ -62,6 +63,7 @@ public class MonitorUtils {
              ni = Objects.requireNonNull(this.findNetworkInterface(hardware));
              upload = (ni.getBytesSent() - upload) / statisticTime;
              download = (ni.getBytesRecv() - download) / statisticTime;
+             System.out.println(download);
              read = (hardware.getDiskStores().stream().mapToLong(HWDiskStore::getReadBytes).sum() - read) / statisticTime;
              write = (hardware.getDiskStores().stream().mapToLong(HWDiskStore::getWriteBytes).sum() - write) / statisticTime;
              double memory = (hardware.getMemory().getTotal() - hardware.getMemory().getAvailable()) / 1024.0 / 1024 / 1024;
@@ -118,8 +120,9 @@ public class MonitorUtils {
                 NetworkInterface ni = network.queryNetworkInterface();
                 // 检查网络接口是否符合预定条件
                 if (!ni.isLoopback() && !ni.isPointToPoint() && ni.isUp() && !ni.isVirtual()
-                    && (ni.getName().startsWith("eth") || ni.getName().startsWith("en"))
-                    && ipv4Addr.length > 0){
+                    && (ni.getName().startsWith("eth") || ni.getName().startsWith("en") || ni.getName().startsWith("wlan"))
+                    && ipv4Addr.length > 0 ){
+
                     // 如果符合条件，返回该网络接口
                     return network;
                 }
