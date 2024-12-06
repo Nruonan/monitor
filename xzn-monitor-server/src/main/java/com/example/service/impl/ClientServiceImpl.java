@@ -53,7 +53,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
             // 生成一个新的客户端ID
             int id = this.randoClientId();
             // 创建一个新的客户端对象，初始状态为未命名主机，并使用当前时间作为注册时间
-            ClientDO client = new ClientDO(id, "未命名主机", token, new Date());
+            ClientDO client = new ClientDO(id, "未命名主机", token, "cn","未命名节点", new Date());
             // 尝试保存客户端对象到数据库或持久化存储
             if (this.save(client)) {
                 // 保存成功后，更新注册令牌以备下次注册
