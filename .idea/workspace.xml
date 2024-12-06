@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4cdac2a7-154d-48fc-8bdb-6f857f2aaf3d" name="更改" comment="feat(xzn-monitor-client): 实现客户端存储系统监控数据">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/2024-12-06-spring-0.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/2024-12-06-spring-0.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/xzn-monitor-client/src/main/java/com/example/config/ServerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-client/src/main/java/com/example/config/ServerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-client/src/main/java/com/example/utils/NetUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-client/src/main/java/com/example/utils/NetUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/config/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/config/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/config/SwaggerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/config/SwaggerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/controller/AuthorizeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/controller/AuthorizeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/controller/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/controller/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/request/ConfirmResetDTOReq.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/request/ConfirmResetReqDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/request/EmailResetDTOReq.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/request/EmailResetReqDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/response/AuthorizeDTOResp.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/entity/vo/response/AuthorizeRespDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/impl/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/impl/AccountServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/impl/ClientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/xzn-monitor-server/src/main/java/com/example/service/impl/ClientServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +39,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/xzn-monitor-client" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -82,14 +69,18 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "corretto-17",
-    "last_opened_file_path": "E:/xzn-monitor/xzn-monitor/xzn-monitor-server/src/main/java/com/example/controller/exception",
+    "last_opened_file_path": "E:/xzn-monitor/xzn-monitor/my-project-frontend/src/views/welcome",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
     "spring.configuration.checksum": "f4a5ce76064989bff5e16a3ee75d2eec",
+    "ts.external.directory.path": "D:\\idea\\IntelliJ IDEA 2023.1.4\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -98,7 +89,13 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\xzn-monitor\xzn-monitor\my-project-frontend\src\views\welcome" />
+      <recent name="E:\xzn-monitor\xzn-monitor\my-project-frontend\src\Component" />
+      <recent name="E:\xzn-monitor\xzn-monitor\my-project-frontend\src" />
       <recent name="E:\xzn-monitor\xzn-monitor\xzn-monitor-server\src\main\java\com\example\controller\exception" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\xzn-monitor\xzn-monitor\my-project-frontend\src\views\welcome" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.entity.dto" />
@@ -112,7 +109,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.MonitorClientApplication">
+  <component name="RunManager" selected="npm.dev">
     <configuration name="MonitorClientApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="xzn-monitor-client" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.MonitorClientApplication" />
@@ -127,6 +124,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/my-project-frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -138,7 +150,7 @@
       <updated>1733410499789</updated>
       <workItem from="1733410500837" duration="7676000" />
       <workItem from="1733444025671" duration="6645000" />
-      <workItem from="1733464882354" duration="7404000" />
+      <workItem from="1733464882354" duration="8698000" />
     </task>
     <task id="LOCAL-00001" summary="1.0">
       <option name="closed" value="true" />
@@ -228,7 +240,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733470702994</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat(xzn-monitor-client): 实现客户端存储系统监控数据">
+      <option name="closed" value="true" />
+      <created>1733472451922</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1733472451922</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
