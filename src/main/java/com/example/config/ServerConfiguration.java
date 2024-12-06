@@ -45,9 +45,17 @@ public class ServerConfiguration implements ApplicationRunner {
         // 返回ConnectionConfig对象实例
         return config;
     }
+    /**
+     * 更新系统信息到服务端
+     * 
+     * 该方法覆盖自ApplicationRunner接口，用于在Spring Boot应用启动后执行特定操作
+     * @param args 应用程序参数，允许在应用启动时传递命令行参数
+     * @throws Exception 如果信息更新过程中遇到任何异常，则抛出此异常
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info("正在向服务端更新系统信息");
+        // 将监控到的基础信息更新到服务端
         netUtils.updateBaseDetails(monitorUtils.monitorBaseDetail());
     }
     /**
