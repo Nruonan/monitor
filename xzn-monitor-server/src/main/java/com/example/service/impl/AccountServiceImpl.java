@@ -100,6 +100,23 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
         }
     }
 
+    /**
+     * 邮件验证码重置密码操作，需要检查验证码是否正确
+     * @param info 重置基本信息
+     * @return 操作结果，null表示正常，否则为错误原因
+     */
+    @Override
+    public String resetEmailAccountPassword(EmailResetDTOReq info) {
+        String verify = resetConfirm(new ConfirmResetDTOReq(info.getEmail(), info.getCode()));
+        if(verify != null) return verify;
+        String email = info.getEmail();
+        String password = passwordEncoder.encode(info.getPassword());
+        boolean update = this.update().eq("email", email).set("password", password).update();
+        if(update) {
+            this.deleteEmailVerifyCode(email);
+        }
+        return update ? null : "更新失败，请联系管理员";
+    }
 
     /**
      * 重置密码确认操作，验证验证码是否正确
