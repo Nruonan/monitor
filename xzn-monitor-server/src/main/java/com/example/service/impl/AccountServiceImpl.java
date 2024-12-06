@@ -1,10 +1,11 @@
 package com.example.service.impl;
 
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.RestBean;
 import com.example.entity.dto.AccountDO;
-import com.example.entity.vo.request.ConfirmResetReq;
-import com.example.entity.vo.request.EmailResetReq;
+import com.example.entity.vo.request.ConfirmResetDTOReq;
+import com.example.entity.vo.request.EmailResetDTOReq;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -14,6 +15,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -48,6 +50,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
     FlowUtils flow;
     @Resource
     JwtUtils jwtUtils;
+
     @Override
     public Boolean logout(HttpServletRequest request, HttpServletResponse response) {
         String authorization = request.getHeader("Authorization");
@@ -97,23 +100,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
         }
     }
 
-    /**
-     * 邮件验证码重置密码操作，需要检查验证码是否正确
-     * @param info 重置基本信息
-     * @return 操作结果，null表示正常，否则为错误原因
-     */
-    @Override
-    public String resetEmailAccountPassword(EmailResetReq info) {
-        String verify = resetConfirm(new ConfirmResetReq(info.getEmail(), info.getCode()));
-        if(verify != null) return verify;
-        String email = info.getEmail();
-        String password = passwordEncoder.encode(info.getPassword());
-        boolean update = this.update().eq("email", email).set("password", password).update();
-        if(update) {
-            this.deleteEmailVerifyCode(email);
-        }
-        return update ? null : "更新失败，请联系管理员";
-    }
 
     /**
      * 重置密码确认操作，验证验证码是否正确
@@ -121,7 +107,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String resetConfirm(ConfirmResetReq info) {
+    public String resetConfirm(ConfirmResetDTOReq info) {
         String email = info.getEmail();
         String code = this.getEmailVerifyCode(email);
         if(code == null) return "请先获取验证码";
