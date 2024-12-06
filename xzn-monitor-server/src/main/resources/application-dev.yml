@@ -4,6 +4,10 @@ springdoc:
   swagger-ui:
     operations-sorter: alpha
 spring:
+  influxdb:
+    url: http://129.204.155.72:8086
+    user: root
+    password: xznxznxzn
   mail:
     password: BEAGDULMBXDYOGGO
     username: zhennan996@163.com
