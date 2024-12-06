@@ -5,7 +5,9 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.dto.ClientDetailDO;
+import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
+import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
 import com.example.service.ClientService;
@@ -68,16 +70,35 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         return false;
     }
 
+    /**
+     * 更新客户端详情信息
+     * @param client 客户端基本信息对象，用于获取客户端ID
+     * @param requestParam 请求参数对象，包含要更新的客户端详情信息
+     */
     @Override
     public void updateClientDetail(ClientDO client, ClientDetailReqDTO requestParam) {
+        // 创建一个新的客户端详情对象
         ClientDetailDO clientDetailDO = new ClientDetailDO();
+        // 将请求参数复制到客户端详情对象中
         BeanUtil.copyProperties(requestParam,clientDetailDO);
+        // 设置客户端详情对象的ID为当前客户端的ID
         clientDetailDO.setId(client.getId());
+        // 检查数据库中是否存在当前客户端的详情记录
         if (Optional.ofNullable(detailMapper.selectById(client.getId())).isPresent()){
+            // 如果存在，则更新详情记录
             detailMapper.updateById(clientDetailDO);
         }else{
+            // 如果不存在，则插入新的详情记录
             detailMapper.insert(clientDetailDO);
         }
+        System.out.println(clientDetailDO);
+    }
+    private Map<Integer, RuntimeDetailDO> currentRuntime = new ConcurrentHashMap<>();
+    @Override
+    public void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam) {
+        RuntimeDetailDO bean = BeanUtil.toBean(requestParam, RuntimeDetailDO.class);
+        currentRuntime.put(client.getId(),bean);
+        System.out.println(bean);
     }
 
     @Override

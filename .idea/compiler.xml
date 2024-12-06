@@ -5,7 +5,7 @@
       <profile default="true" name="Default" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <processorPath useClasspath="false">
+        <processorPath>
           <entry name="$PROJECT_DIR$/../../maven/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
       </profile>

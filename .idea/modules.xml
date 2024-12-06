@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/xzn-monitor.iml" filepath="$PROJECT_DIR$/xzn-monitor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/my-project-frontend/xzn-monitor-web.iml" filepath="$PROJECT_DIR$/my-project-frontend/xzn-monitor-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xzn-monitor-web/xzn-monitor-web.iml" filepath="$PROJECT_DIR$/xzn-monitor-web/xzn-monitor-web.iml" />
     </modules>
   </component>
 </project>
