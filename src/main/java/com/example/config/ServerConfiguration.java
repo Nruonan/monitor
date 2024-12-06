@@ -2,6 +2,7 @@ package com.example.config;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.example.entity.ConnectionConfig;
+import com.example.utils.MonitorUtils;
 import com.example.utils.NetUtils;
 import jakarta.annotation.Resource;
 import java.util.Optional;
@@ -25,7 +26,8 @@ public class ServerConfiguration {
 
     @Resource
     NetUtils netUtils;
-
+    @Resource
+    MonitorUtils monitorUtils;
     @Bean
     ConnectionConfig connectionConfig() {
         log.info("正在加载服务端链接配置...");
@@ -37,6 +39,7 @@ public class ServerConfiguration {
         if (Optional.ofNullable(config).isEmpty()){
             config = this.registerToServer();
         }
+        System.out.println(monitorUtils.monitorBaseDetail());
         // 返回ConnectionConfig对象实例
         return config;
     }
