@@ -2,7 +2,7 @@ package com.example.config;
 
 import com.example.entity.RestBean;
 import com.example.entity.dto.AccountDO;
-import com.example.entity.vo.response.AuthorizeDTOResp;
+import com.example.entity.vo.response.AuthorizeRespDTO;
 import com.example.filter.JwtAuthenticationFilter;
 import com.example.filter.RequestLogFilter;
 import com.example.service.AccountService;
@@ -11,7 +11,6 @@ import com.example.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,8 +23,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -116,7 +113,7 @@ public class SecurityConfiguration{
             if(jwt == null) {
                 writer.write(RestBean.forbidden("登录验证频繁，请稍后再试").asJsonString());
             } else {
-                AuthorizeDTOResp vo = accountDO.asViewObject(AuthorizeDTOResp.class, o -> o.setToken(jwt));
+                AuthorizeRespDTO vo = accountDO.asViewObject(AuthorizeRespDTO.class, o -> o.setToken(jwt));
                 vo.setExpire(utils.expireTime());
                 writer.write(RestBean.success(vo).asJsonString());
             }

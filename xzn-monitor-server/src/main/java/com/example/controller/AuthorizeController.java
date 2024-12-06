@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.entity.RestBean;
-import com.example.entity.vo.request.ConfirmResetDTOReq;
-import com.example.entity.vo.request.EmailResetDTOReq;
+import com.example.entity.vo.request.ConfirmResetReqDTO;
+import com.example.entity.vo.request.EmailResetReqDTO;
 import com.example.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,7 +65,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-confirm")
     @Operation(summary = "密码重置确认")
-    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetDTOReq vo){
+    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetReqDTO vo){
         return this.messageHandle(() -> accountService.resetConfirm(vo));
     }
 
@@ -76,7 +76,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-password")
     @Operation(summary = "密码重置操作")
-    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetDTOReq vo){
+    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetReqDTO vo){
         return this.messageHandle(() ->
                 accountService.resetEmailAccountPassword(vo));
     }

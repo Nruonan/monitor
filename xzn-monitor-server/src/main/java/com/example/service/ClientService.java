@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.entity.dto.ClientDO;
+import com.example.entity.vo.request.ClientDetailReqDTO;
 
 /**
  * @author Nruonan
@@ -12,4 +13,5 @@ public interface ClientService extends IService<ClientDO> {
     ClientDO findClientByToken(String token);
     ClientDO findClientById(int id);
     boolean verifyAndRegister(String token);
+    void updateClientDetail(ClientDO client, ClientDetailReqDTO requestParam);
 }

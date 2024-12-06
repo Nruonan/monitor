@@ -2,10 +2,9 @@ package com.example.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.entity.RestBean;
 import com.example.entity.dto.AccountDO;
-import com.example.entity.vo.request.ConfirmResetDTOReq;
-import com.example.entity.vo.request.EmailResetDTOReq;
+import com.example.entity.vo.request.ConfirmResetReqDTO;
+import com.example.entity.vo.request.EmailResetReqDTO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -15,7 +14,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -106,8 +104,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String resetEmailAccountPassword(EmailResetDTOReq info) {
-        String verify = resetConfirm(new ConfirmResetDTOReq(info.getEmail(), info.getCode()));
+    public String resetEmailAccountPassword(EmailResetReqDTO info) {
+        String verify = resetConfirm(new ConfirmResetReqDTO(info.getEmail(), info.getCode()));
         if(verify != null) return verify;
         String email = info.getEmail();
         String password = passwordEncoder.encode(info.getPassword());
@@ -124,7 +122,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
      * @return 操作结果，null表示正常，否则为错误原因
      */
     @Override
-    public String resetConfirm(ConfirmResetDTOReq info) {
+    public String resetConfirm(ConfirmResetReqDTO info) {
         String email = info.getEmail();
         String code = this.getEmailVerifyCode(email);
         if(code == null) return "请先获取验证码";
