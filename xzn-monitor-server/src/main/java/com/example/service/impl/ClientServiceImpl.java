@@ -5,12 +5,12 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.dto.ClientDetailDO;
+import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
 import com.example.service.ClientService;
-import com.example.utils.InfluxDbUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.security.SecureRandom;
@@ -27,16 +27,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> implements ClientService {
 
-
+    @Resource
+    ClientDetailMapper detailMapper;
     private String registerToken = this.generateNewToken();
     // 多线程map 保存数据
     private final Map<Integer, ClientDO> clientCache = new ConcurrentHashMap<>();
     private final Map<String, ClientDO> clientTokenCache = new ConcurrentHashMap<>();
-    @Resource
-    ClientDetailMapper detailMapper;
 
-    @Resource
-    InfluxDbUtils influxDbUtils;
     @PostConstruct
     public void init() {
         this.list().forEach(this::addClientCache);
@@ -96,11 +93,12 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         }
         System.out.println(clientDetailDO);
     }
-    private final Map<Integer, RuntimeDetailReqDTO> currentRuntime = new ConcurrentHashMap<>();
+    private Map<Integer, RuntimeDetailDO> currentRuntime = new ConcurrentHashMap<>();
     @Override
     public void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam) {
-       currentRuntime.put(client.getId(),requestParam);
-       influxDbUtils.writeRuntimeData(client.getId(), requestParam);
+        RuntimeDetailDO bean = BeanUtil.toBean(requestParam, RuntimeDetailDO.class);
+        currentRuntime.put(client.getId(),bean);
+        System.out.println(bean);
     }
 
     @Override

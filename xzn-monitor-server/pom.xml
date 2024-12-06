@@ -100,11 +100,6 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.26</version>
         </dependency>
-        <dependency>
-            <groupId>com.influxdb</groupId>
-            <artifactId>influxdb-client-java</artifactId>
-            <version>6.6.0</version>
-        </dependency>
     </dependencies>
 
     <profiles>
