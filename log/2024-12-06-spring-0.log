@@ -1670,3 +1670,33 @@ Relying upon circular references is discouraged and they are prohibited by defau
 2024-12-06 16:22:12.713  INFO 29676 --- [org.springframework.amqp.rabbit.RabbitListenerEndpointContainer#0-2] (system) o.s.a.r.l.SimpleMessageListenerContainer : Successfully waited for workers to finish.
 2024-12-06 16:22:14.082  INFO 29676 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-12-06 16:22:14.216  INFO 29676 --- [SpringApplicationShutdownHook] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-12-06 16:26:47.332  INFO 14968 --- [main] (system) com.example.MonitorServerApplication     : Starting MonitorServerApplication using Java 17.0.8.1 with PID 14968 (E:\xzn-monitor\xzn-monitor\xzn-monitor-server\target\classes started by Nruonan in E:\xzn-monitor\xzn-monitor)
+2024-12-06 16:26:47.333  INFO 14968 --- [main] (system) com.example.MonitorServerApplication     : The following 1 profile is active: "dev"
+2024-12-06 16:26:48.874  INFO 14968 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-06 16:26:48.876  INFO 14968 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-12-06 16:26:48.903  INFO 14968 --- [main] (system) .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2024-12-06 16:26:49.576  INFO 14968 --- [main] (system) o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-12-06 16:26:49.578  INFO 14968 --- [main] (system) o.a.catalina.core.AprLifecycleListener   : An older version [2.0.4] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [2.0.5]
+2024-12-06 16:26:49.579  INFO 14968 --- [main] (system) o.a.catalina.core.AprLifecycleListener   : Loaded Apache Tomcat Native library [2.0.4] using APR version [1.7.4].
+2024-12-06 16:26:49.595  INFO 14968 --- [main] (system) o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 3.0.9 30 May 2023]
+2024-12-06 16:26:49.606  INFO 14968 --- [main] (system) o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-06 16:26:49.606  INFO 14968 --- [main] (system) o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.28]
+2024-12-06 16:26:49.668  INFO 14968 --- [main] (system) o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-06 16:26:49.668  INFO 14968 --- [main] (system) w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2299 ms
+2024-12-06 16:26:50.944  INFO 14968 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-12-06 16:26:51.417  INFO 14968 --- [main] (system) com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3b8b5b40
+2024-12-06 16:26:51.419  INFO 14968 --- [main] (system) com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-12-06 16:26:51.951  INFO 14968 --- [main] (system) r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name accountServiceImpl
+2024-12-06 16:26:52.706  INFO 14968 --- [main] (system) o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-12-06 16:26:52.711  INFO 14968 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [129.204.155.72:5672]
+2024-12-06 16:26:52.986  INFO 14968 --- [main] (system) o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#27048db3:0/SimpleConnection@4b5ceb5d [delegate=amqp://xzn@129.204.155.72:5672/, localPort=11633]
+2024-12-06 16:26:53.218  INFO 14968 --- [main] (system) com.example.MonitorServerApplication     : Started MonitorServerApplication in 6.472 seconds (process running for 7.143)
+2024-12-06 16:28:43.651  INFO 14968 --- [http-nio-8081-exec-1] (system) o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-06 16:28:43.651  INFO 14968 --- [http-nio-8081-exec-1] (system) o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-06 16:28:43.654  INFO 14968 --- [http-nio-8081-exec-1] (system) o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2024-12-06 16:28:44.339  INFO 14968 --- [http-nio-8081-exec-1] (177778989765627904) com.example.filter.RequestLogFilter      : 请求URL: "/api/auth/login" (POST) | 远程IP地址: 0:0:0:0:0:0:0:1 │ 身份: 未验证 | 请求参数列表: {"username":"渣fit","password":"123456"}
+2024-12-06 16:28:44.857  INFO 14968 --- [http-nio-8081-exec-1] (177778989765627904) com.example.filter.RequestLogFilter      : 请求处理耗时: 521ms | 响应结果: {"code":200,"data":{"expire":"2024-12-07 16:28:44.831","role":"admin","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoi5rijZml0IiwiaWQiOjIsImV4cCI6MTczMzU2MDEyNCwiaWF0IjoxNzMzNDczNzI0LCJqdGkiOiI3ZGRiNGUwZi1jYWNkLTQyM2UtOTMyYy03OTgyMjM0MzM2MDMiLCJhdXRob3JpdGllcyI6WyJST0xFX2FkbWluIl19.Z713CvzrL5Hi0G8CrTKwIjNEjZZ3XhBA3k5PzEfrVRg","username":"渣fit"},"id":177778989765627904,"message":"请求成功"}
+2024-12-06 16:28:48.395  INFO 14968 --- [http-nio-8081-exec-3] (177779006790307840) com.example.filter.RequestLogFilter      : 请求URL: "/api/auth/logout" (OPTIONS) | 远程IP地址: 0:0:0:0:0:0:0:1 │ 身份: 未验证 | 请求参数列表: {}
+2024-12-06 16:28:48.415  INFO 14968 --- [http-nio-8081-exec-3] (177779006790307840) com.example.filter.RequestLogFilter      : 请求处理耗时: 20ms | 响应结果: 
+2024-12-06 16:28:48.532  INFO 14968 --- [http-nio-8081-exec-4] (177779007364927488) com.example.filter.RequestLogFilter      : 请求URL: "/api/auth/logout" (GET) | 远程IP地址: 0:0:0:0:0:0:0:1 │ 身份: 渣fit (UID: 2) | 角色: [ROLE_admin] | 请求参数列表: {}
+2024-12-06 16:28:48.873  INFO 14968 --- [http-nio-8081-exec-4] (177779007364927488) com.example.filter.RequestLogFilter      : 请求处理耗时: 341ms | 响应结果: {"id":177779007364927488,"code":200,"data":"退出登录成功","message":"请求成功"}
