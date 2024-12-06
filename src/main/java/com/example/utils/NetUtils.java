@@ -1,12 +1,16 @@
 package com.example.utils;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.example.entity.BaseDetail;
 import com.example.entity.ConnectionConfig;
 import com.example.entity.Response;
 import jakarta.annotation.Resource;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -90,5 +94,52 @@ public class NetUtils {
             return Response.errorResponse(e);
         }
     }
-
+    /**
+     * 更新系统基本信息
+     * @param detail 要更新的系统基本信息对象，包含需要更新的详细信息
+     */
+    public void updateBaseDetails(BaseDetail detail){
+        // 发送HTTP POST请求到服务器，请求路径为"/detail"，携带参数为当前系统基本信息对象
+        Response response = this.doPost("/detail", detail);
+        
+        // 根据服务器返回的响应结果，判断更新操作是否成功
+        if (response.success()){
+            // 如果响应表示操作成功，则记录日志信息，表明系统基本信息已成功更新
+            log.info("系统基本信息已更新完成");
+        }else{
+            // 如果响应表示操作失败，则记录错误日志，包含失败的原因信息
+            log.error("系统更新原因更新失败：{}",response.message());
+        }
+    }
+    /**
+     * 执行POST请求并返回响应结果
+     * 此方法构建一个POST请求，将给定的数据转换为JSON格式作为请求体，发送到指定的URL，并解析返回的响应
+     * 
+     * @param url 请求的URL路径，将被追加到配置的服务器地址后面
+     * @param data 请求的数据，将被转换为JSON格式
+     * @return Response对象，包含从服务器返回的响应数据
+     * @throws RuntimeException 如果请求过程中发生错误，将抛出运行时异常
+     */
+    private Response doPost(String url, Object data){
+        try{
+            // 将输入数据转换为JSON字符串
+            String rawData = JSONObject.from(data).toJSONString();
+            
+            // 构建HTTP POST请求
+            HttpRequest request = HttpRequest.newBuilder().POST(BodyPublishers.ofString(rawData))
+                .uri(new URI(config.getAddress() + "/monitor" + url))
+                .header("Authorization", config.getToken())
+                .header("Content-Type", "application/json")
+                .build();
+            
+            // 发送请求并接收响应
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    
+            // 解析响应体为Response对象并返回
+            return JSONObject.parseObject(response.body()).to(Response.class);
+        } catch (Exception e) {
+            log.error("在发起服务端请求时出现问题",e);
+            return Response.errorResponse(e);
+        }
+    }
 }
