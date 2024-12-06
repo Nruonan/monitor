@@ -2,7 +2,7 @@ package com.example.config;
 
 import com.example.entity.RestBean;
 import com.example.entity.dto.AccountDO;
-import com.example.entity.vo.response.AuthorizeResp;
+import com.example.entity.vo.response.AuthorizeDTOResp;
 import com.example.filter.JwtAuthenticationFilter;
 import com.example.filter.RequestLogFilter;
 import com.example.service.AccountService;
@@ -11,14 +11,21 @@ import com.example.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -29,11 +36,12 @@ import java.io.PrintWriter;
  * SpringSecurity相关配置
  */
 @Configuration
-public class SecurityConfiguration {
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfiguration{
 
     @Resource
     JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Resource
     RequestLogFilter requestLogFilter;
 
@@ -76,7 +84,10 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, RequestLogFilter.class)
                 .build();
     }
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
     /**
      * 将多种类型的Handler整合到同一个方法中，包含：
      * - 登录成功
@@ -105,7 +116,7 @@ public class SecurityConfiguration {
             if(jwt == null) {
                 writer.write(RestBean.forbidden("登录验证频繁，请稍后再试").asJsonString());
             } else {
-                AuthorizeResp vo = accountDO.asViewObject(AuthorizeResp.class, o -> o.setToken(jwt));
+                AuthorizeDTOResp vo = accountDO.asViewObject(AuthorizeDTOResp.class, o -> o.setToken(jwt));
                 vo.setExpire(utils.expireTime());
                 writer.write(RestBean.success(vo).asJsonString());
             }

@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
  * 密码重置表单实体
  */
 @Data
-public class EmailResetReq {
+public class EmailResetDTOReq {
     @Email
     String email;
     @Length(max = 6, min = 6)

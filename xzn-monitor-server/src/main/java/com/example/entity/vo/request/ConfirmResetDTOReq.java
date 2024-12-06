@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 @AllArgsConstructor
-public class ConfirmResetReq {
+public class ConfirmResetDTOReq {
     @Email
     String email;
     @Length(max = 6, min = 6)

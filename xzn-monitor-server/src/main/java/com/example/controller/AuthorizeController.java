@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import com.example.entity.RestBean;
-import com.example.entity.vo.request.ConfirmResetReq;
-import com.example.entity.vo.request.EmailResetReq;
+import com.example.entity.vo.request.ConfirmResetDTOReq;
+import com.example.entity.vo.request.EmailResetDTOReq;
 import com.example.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,14 +29,6 @@ public class AuthorizeController {
 
     @Resource
     AccountService accountService;
-    @PostMapping("/login")
-    @Operation(summary = "用户登录")
-    public RestBean<Void> login(@RequestParam String username,
-                                @RequestParam String password,
-                                HttpServletRequest request){
-        //return this.messageHandle(() -> accountService.login(username, password, request));
-        return RestBean.success();
-    }
     /**
      * 退出登录处理，将对应的Jwt令牌列入黑名单不再使用
      * @param request 请求
@@ -73,7 +65,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-confirm")
     @Operation(summary = "密码重置确认")
-    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetReq vo){
+    public RestBean<Void> resetConfirm(@RequestBody @Valid ConfirmResetDTOReq vo){
         return this.messageHandle(() -> accountService.resetConfirm(vo));
     }
 
@@ -84,7 +76,7 @@ public class AuthorizeController {
      */
     @PostMapping("/reset-password")
     @Operation(summary = "密码重置操作")
-    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetReq vo){
+    public RestBean<Void> resetPassword(@RequestBody @Valid EmailResetDTOReq vo){
         return this.messageHandle(() ->
                 accountService.resetEmailAccountPassword(vo));
     }

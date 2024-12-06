@@ -1,7 +1,7 @@
 package com.example.config;
 
 import com.example.entity.RestBean;
-import com.example.entity.vo.response.AuthorizeResp;
+import com.example.entity.vo.response.AuthorizeDTOResp;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -87,7 +87,7 @@ public class SwaggerConfiguration {
                                 .addApiResponse("200", new ApiResponse()
                                         .description("OK")
                                         .content(new Content().addMediaType("*/*", new MediaType()
-                                                .example(RestBean.success(new AuthorizeResp()).asJsonString())
+                                                .example(RestBean.success(new AuthorizeDTOResp()).asJsonString())
                                         ))
                                 )
                         )
