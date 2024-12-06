@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> implements ClientService {
 
-    private String registerToken = this.registerToken;
+    private String registerToken = this.generateNewToken();
     // 多线程map 保存数据
     private final Map<Integer, ClientDO> clientCache = new ConcurrentHashMap<>();
     private final Map<String, ClientDO> clientTokenCache = new ConcurrentHashMap<>();
@@ -70,6 +70,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         for (int i = 0; i < 24; i++) {
             sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
+        System.out.println(sb);
         return sb.toString();
     }
 }

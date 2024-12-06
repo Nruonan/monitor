@@ -2,11 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../maven/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+      </profile>
       <profile name="Annotation profile for xzn-monitor-client" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
+        <processorPath>
           <entry name="$PROJECT_DIR$/../../maven/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
         <module name="xzn-monitor-client" />
