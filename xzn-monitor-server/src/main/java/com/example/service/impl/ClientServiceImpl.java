@@ -8,6 +8,7 @@ import com.example.entity.dto.ClientDetailDO;
 import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
 import com.example.service.ClientService;
@@ -15,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,6 +101,33 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         RuntimeDetailDO bean = BeanUtil.toBean(requestParam, RuntimeDetailDO.class);
         currentRuntime.put(client.getId(),bean);
         System.out.println(bean);
+    }
+
+    /**
+     * 列出所有客户端详细信息
+     * 
+     * 本方法从客户端缓存中获取所有客户端信息，将每条信息转换为ClientDetailReqDTO对象，并根据客户端ID从数据库中获取详细信息
+     * 如果客户端的运行时信息在当前缓存中存在且时间戳在60秒内，也将其信息合并到DTO对象中
+     * 
+     * @return 包含所有客户端详细信息的DTO列表
+     */
+    @Override
+    public List<ClientPreviewRespDTO> listAllClient() {
+        return clientCache.values().stream().map(clientDO ->{
+                // 将客户端信息转换为ClientDetailReqDTO对象
+            ClientPreviewRespDTO bean = BeanUtil.toBean(clientDO, ClientPreviewRespDTO.class);
+                // 从数据库中获取客户端详细信息并复制到DTO对象中
+                BeanUtil.copyProperties(detailMapper.selectById(clientDO.getId()),bean);
+                // 获取当前缓存中的客户端运行时信息
+                RuntimeDetailDO runtime = currentRuntime.get(clientDO.getId());
+                // 如果运行时信息存在且时间戳在60秒内，将其信息复制到DTO对象中
+                if (runtime != null && System.currentTimeMillis() - runtime.getTimestamp() < 60 * 1000){
+                    BeanUtil.copyProperties(runtime,bean);
+                    // 设置在线
+                    bean.setOnline(true);
+                }
+                return bean;
+        }).toList();
     }
 
     @Override

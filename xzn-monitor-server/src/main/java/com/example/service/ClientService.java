@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.response.ClientPreviewRespDTO;
+import java.util.List;
 
 /**
  * @author Nruonan
@@ -16,4 +18,6 @@ public interface ClientService extends IService<ClientDO> {
     boolean verifyAndRegister(String token);
     void updateClientDetail(ClientDO client, ClientDetailReqDTO requestParam);
     void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam);
+
+    List<ClientPreviewRespDTO> listAllClient();
 }
