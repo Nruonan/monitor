@@ -1,7 +1,5 @@
 <script setup>
-import {copyIp, fitByUnit, percentageToStatus} from "@/tool";
-import {useClipboard} from "@vueuse/core";
-import {ElMessage} from "element-plus";
+import {copyIp, fitByUnit, osNameToIcon, percentageToStatus} from "@/tool";
 import {rename} from "@/method/client";
 
 const props = defineProps({
@@ -22,6 +20,8 @@ const props = defineProps({
           <i class="fa-solid fa-pen-to-square" @click.stop="rename(data.id,data.name,props.update)"/>
         </div>
         <div class="os">
+          <i :style="`fa-brands ${osNameToIcon(data.osName).color}`"
+             :class="`fa-brands ${osNameToIcon(data.osName).icon}`"></i>
           操作系统：{{`${data.osName} ${data.osVersion}`}}
         </div>
       </div>
@@ -44,7 +44,7 @@ const props = defineProps({
     </div>
     <div class="hardware">
       <i class="fa-solid fa-microchip"></i>
-      <span style="margin-right: 10px"> {{`${data.cpuCore} CPU`}}</span>
+      <span style="margin-right: 10px"> {{` ${data.cpuCore} CPU`}}</span>
       <i class="fa-solid fa-memory"></i>
       <span>{{` ${data.memory.toFixed(1)} GB`}}</span>
     </div>

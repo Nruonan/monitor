@@ -1,6 +1,7 @@
 import {get, post} from "@/net";
 import {ElMessage, ElMessageBox} from "element-plus";
 
+
 export function rename(id,name,update){
   return ElMessageBox.prompt("请输入新的服务器主机名称","修改名称",{
     confirmButtonText: "确定",

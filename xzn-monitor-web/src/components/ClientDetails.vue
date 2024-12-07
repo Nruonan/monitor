@@ -1,22 +1,58 @@
 <script setup>
 import {reactive, watch} from "vue";
 import {getClientDetails, rename} from "@/method/client";
-import {copyIp} from "@/tool";
-
+import {copyIp, cpuNameToImage, osNameToIcon} from "@/tool";
+import {post} from "@/net";
+import {ElMessage} from "element-plus";
+const locations = [
+  {name: 'cn', desc: '中国大陆'},
+  {name: 'hk', desc: '香港'},
+  {name: 'jp', desc: '日本'},
+  {name: 'us', desc: '美国'},
+  {name: 'sg', desc: '新加坡'},
+  {name: 'kr', desc: '韩国'},
+  {name: 'de', desc: '德国'}
+]
 const props = defineProps({
   id: Number,
   update: Function
 })
 const details = reactive({
   base: {},
-  runtime: {}
+  runtime: {},
+  editNode: false
 })
-watch(() => props.id, (value) => {
+const nodeEdit = reactive({
+  name: '',
+  location: ''
+})
+const enableNodeEdit = () =>{
+  details.editNode = true
+  nodeEdit.name = details.base.node
+  nodeEdit.location = details.base.location
+}
+const init = value =>{
   if (value !== -1) {
     details.base = {}
     getClientDetails(value,details)
   }
-},{immediate: true})
+}
+const submitNodeEdit = () =>{
+  post('api/monitor/rename-node',{
+    id: props.id,
+    node:nodeEdit.name,
+    location:nodeEdit.location
+  },() => {
+    details.editNode = false
+    updateDetails()
+    ElMessage.success('节点信息已更新')
+  })
+}
+function updateDetails(){
+  props.update()
+  init(props.id)
+}
+watch(() => props.id, init , {immediate: true})
 </script>
 
 <template>
@@ -35,7 +71,7 @@ watch(() => props.id, (value) => {
         <div>
           <span>服务器名称</span>
           <span>{{details.base.name}}</span>&nbsp;
-          <i @click.stop="rename(details.base.id, details.base.name, props.update)"
+          <i @click.stop="rename(details.base.id, details.base.name, updateDetails)"
              class="fa-solid fa-pen-to-square interact-item"/>
         </div>
         <div>
@@ -53,6 +89,24 @@ watch(() => props.id, (value) => {
           <i @click.stop="enableNodeEdit"
              class="fa-solid fa-pen-to-square interact-item"/>
         </div>
+        <div v-else>
+          <span>服务器节点</span>
+          <div style="display: inline-block;height: 15px">
+            <div style="display: flex">
+              <el-select v-model="nodeEdit.location" style="width: 80px" size="small">
+                <el-option v-for="item in locations" :value="item.name">
+                  <span :class="`flag-icon flag-icon-${item.name}`"></span>&nbsp;
+                  {{item.desc}}
+                </el-option>
+              </el-select>
+              <el-input v-model="nodeEdit.name" style="margin-left: 10px"
+                        size="small" placeholder="请输入节点名称..."/>
+              <div style="margin-left: 10px">
+                <i @click.stop="submitNodeEdit" class="fa-solid fa-check interact-item"/>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <span>公网IP地址</span>
           <span>
@@ -64,20 +118,21 @@ watch(() => props.id, (value) => {
           <span>处理器</span>
           <span>{{details.base.cpuName}}</span>
           <el-image style="height: 20px;margin-left: 10px"
-                    />
+                    :src="`/cpu-icons/${cpuNameToImage(details.base.cpuName)}`"/>
         </div>
         <div>
           <span>硬件配置信息</span>
           <span>
             <i class="fa-solid fa-microchip"></i>
             <span style="margin-right: 10px">{{` ${details.base.cpuCore} CPU 核心数 /`}}</span>
-            <i class="fa-solid fa-memory"></i>
             <span>{{` ${details.base.memory.toFixed(1)} GB 内存容量`}}</span>
           </span>
         </div>
         <div>
           <span>操作系统</span>
-          <span>{{`${details.base.osName} ${details.base.osVersion}`}}</span>
+          <i :style="`fa-brands ${osNameToIcon(details.base.osName).color}`"
+             :class="`fa-brands ${osNameToIcon(details.base.osName).icon}`"></i>
+          <span style="margin-left: 10px">{{`${details.base.osName} ${details.base.osVersion}`}}</span>
         </div>
       </div>
       <div class="title" style="margin-top: 20px">
@@ -85,38 +140,41 @@ watch(() => props.id, (value) => {
         实时监控
       </div>
       <el-divider style="margin: 10px 0"/>
-      <div style="display: flex">
-        <el-progress type="dashboard" :width="100" :percentage="20" status="success">
-          <div style="font-size: 17px;font-weight: bold;color: initial">CPU</div>
-          <div style="font-size:13px;color: grey;margin-top: 5px">20%</div>
-        </el-progress>
-        <el-progress style="margin-left:20px"
-                     type="dashboard" :width="100" :percentage="60" status="success">
-          <div style="font-size: 16px;font-weight: bold;color: initial">内存</div>
-          <div style="font-size: 13px;color: grey;margin-top: 5px">28.6 GB</div>
-        </el-progress>
-        <div style="flex: 1; margin-left: 30px; display: flex; flex-direction: column;height: 80px">
-          <div style="flex:1;font-size:14px">
-            <div>实时网络速度</div>
-            <div style="margin: 5px 0">
-              <i style="color: orange" class="fa-solid fa-arrow-up"></i>
-              <span>{{` 20KB/s`}}</span>
-              <el-divider direction="vertical"/>
-              <i style="color: dodgerblue" class="fa-solid fa-arrow-down"></i>
-              <span>{{` 20KB/s`}}</span>
+      <div v-if="details.base.online">
+        <div style="display: flex">
+          <el-progress type="dashboard" :width="100" :percentage="20" status="success">
+            <div style="font-size: 17px;font-weight: bold;color: initial">CPU</div>
+            <div style="font-size:13px;color: grey;margin-top: 5px">20%</div>
+          </el-progress>
+          <el-progress style="margin-left:20px"
+                       type="dashboard" :width="100" :percentage="60" status="success">
+            <div style="font-size: 16px;font-weight: bold;color: initial">内存</div>
+            <div style="font-size: 13px;color: grey;margin-top: 5px">28.6 GB</div>
+          </el-progress>
+          <div style="flex: 1; margin-left: 30px; display: flex; flex-direction: column;height: 80px">
+            <div style="flex:1;font-size:14px">
+              <div>实时网络速度</div>
+              <div style="margin: 5px 0">
+                <i style="color: orange" class="fa-solid fa-arrow-up"></i>
+                <span>{{` 20KB/s`}}</span>
+                <el-divider direction="vertical"/>
+                <i style="color: dodgerblue" class="fa-solid fa-arrow-down"></i>
+                <span>{{` 20KB/s`}}</span>
+              </div>
             </div>
-          </div>
-          <div>
-          <div style="font-size:13px;display: flex;justify-content: space-between">
             <div>
-              <i class="fa-solid fa-hard-drive"></i>
-              <span> 磁盘总容量</span>
-            </div>
-            <div> 6.6GB/40.0 GB</div>
+              <div style="font-size:13px;display: flex;justify-content: space-between">
+                <div>
+                  <i class="fa-solid fa-hard-drive"></i>
+                  <span> 磁盘总容量</span>
+                </div>
+                <div> 6.6GB/40.0 GB</div>
+              </div>
+              <el-progress type="line" status="success" :percentage="24" :show-text="false"/></div>
           </div>
-          <el-progress type="line" status="success" :percentage="24" :show-text="false"/></div>
         </div>
       </div>
+      <el-empty description="服务器处于离线状态，请检查服务器是否正常运行" v-else/>
     </div>
   </div>
 </template>

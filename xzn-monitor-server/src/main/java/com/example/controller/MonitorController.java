@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.entity.RestBean;
 import com.example.entity.vo.request.RenameClientReqDTO;
+import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.service.ClientService;
@@ -34,10 +35,15 @@ public class MonitorController {
         service.renameClient(requestParam);
         return RestBean.success();
     }
-
+    @PostMapping("/rename-node")
+    public RestBean<Void> renameClient(@RequestBody RenameNodeReqDTO requestParam){
+        service.renameNode(requestParam);
+        return RestBean.success();
+    }
     @GetMapping("/details")
     public RestBean<ClientDetailsRespDTO> details(@RequestParam("clientId")int id){
         return RestBean.success(service.clientDetails(id));
     }
+
 
 }

@@ -9,6 +9,7 @@ import com.example.entity.dto.ClientDetailDO;
 import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
+import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
@@ -96,14 +97,12 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
             // 如果不存在，则插入新的详情记录
             detailMapper.insert(clientDetailDO);
         }
-        System.out.println(clientDetailDO);
     }
     private Map<Integer, RuntimeDetailDO> currentRuntime = new ConcurrentHashMap<>();
     @Override
     public void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam) {
         RuntimeDetailDO bean = BeanUtil.toBean(requestParam, RuntimeDetailDO.class);
         currentRuntime.put(client.getId(),bean);
-        System.out.println(bean);
     }
 
     /**
@@ -143,6 +142,17 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         this.update(Wrappers.lambdaUpdate(ClientDO.class)
             .eq(ClientDO::getId,requestParam.getId())
             .set(ClientDO::getName,requestParam.getName()));
+        // 重新初始化配置
+        this.init();
+    }
+
+    @Override
+    public void renameNode(RenameNodeReqDTO requestParam) {
+        // 更新客户端名称
+        this.update(Wrappers.lambdaUpdate(ClientDO.class)
+            .eq(ClientDO::getId,requestParam.getId())
+            .set(ClientDO::getNode,requestParam.getNode())
+            .set(ClientDO::getLocation,requestParam.getLocation()));
         // 重新初始化配置
         this.init();
     }

@@ -23,7 +23,28 @@ function percentageToStatus(percentage){
     return 'warning'
   else return 'exception'
 }
-
+function osNameToIcon(name) {
+  if(name.indexOf('Ubuntu') >= 0)
+    return {icon: 'fa-ubuntu', color: '#db4c1a'}
+  else if(name.indexOf('CentOS') >= 0)
+    return {icon: 'fa-centos', color: '#9dcd30'}
+  else if(name.indexOf('macOS') >= 0)
+    return {icon: 'fa-apple', color: 'grey'}
+  else if(name.indexOf('Windows') >= 0)
+    return {icon: 'fa-windows', color: '#3578b9'}
+  else if(name.indexOf('Debian') >= 0)
+    return {icon: 'fa-debian', color: '#a80836'}
+  else
+    return {icon: 'fa-linux', color: 'grey'}
+}
+function cpuNameToImage(name) {
+  if(name.indexOf('Apple') >= 0)
+    return 'Apple.png'
+  else if(name.indexOf('AMD') >= 0)
+    return 'AMD.png'
+  else
+    return 'Intel.png'
+}
 const { copy } = useClipboard()
 const copyIp = ip => copy(ip).then(() => ElMessage.success('成功复制IP地址到剪贴板'))
-export { fitByUnit,percentageToStatus, copyIp }
+export { fitByUnit,percentageToStatus, copyIp,cpuNameToImage,osNameToIcon }
