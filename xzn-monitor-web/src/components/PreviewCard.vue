@@ -1,5 +1,5 @@
 <script setup>
-import {fitByUnit} from "@/tool";
+import {copyIp, fitByUnit, percentageToStatus} from "@/tool";
 import {useClipboard} from "@vueuse/core";
 import {ElMessage} from "element-plus";
 import {rename} from "@/method/client";
@@ -9,8 +9,7 @@ const props = defineProps({
   update: Function
 })
 
-const {copy} = useClipboard()
-const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复制IP地址')})}
+
 </script>
 
 <template>
@@ -20,7 +19,7 @@ const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复�
         <div class="name">
           <span :class="`flag-icon flag-icon-${data.location}`"/>
           <span style="margin: 0 5px">{{data.name}}</span>
-          <i class="fa-solid fa-pen-to-square" @click.stop="rename(data.id,props.update)"/>
+          <i class="fa-solid fa-pen-to-square" @click.stop="rename(data.id,data.name,props.update)"/>
         </div>
         <div class="os">
           操作系统：{{`${data.osName} ${data.osVersion}`}}
@@ -38,7 +37,7 @@ const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复�
     <el-divider style="margin: 10px 0"/>
     <div class="network">
       <span style="margin-right: 10px">公网IP: {{data.ip}}</span>
-      <i style="color: cornflowerblue" class="fa-solid fa-copy interact-item" @click.stop="copyIp"></i>
+      <i style="color: cornflowerblue" class="fa-solid fa-copy interact-item" @click.stop="copyIp(data.ip)"></i>
     </div>
     <div class="cpu">
       <span style="margin-right: 10px">处理器: {{data.cpuName}}</span>
@@ -51,12 +50,14 @@ const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复�
     </div>
     <div class="progress">
       <span>{{`CPU: ${(data.cpuUsage * 100).toFixed(1)}%`}}</span>
-     <el-progress :percentage="data.cpuUsage * 100"
+     <el-progress :status="percentageToStatus(data.cpuUsage * 100)"
+                  :percentage="data.cpuUsage * 100"
                   :stroke-width="6" :show-text="false" />
     </div>
     <div class="progress">
       <span>内存: <b>{{data.memoryUsage.toFixed(1)}}</b> GB</span>
-      <el-progress :percentage="data.memoryUsage/data.memory * 100"
+      <el-progress :status="percentageToStatus(data.memoryUsage/data.memory * 100)"
+                   :percentage="data.memoryUsage/data.memory * 100"
                    :stroke-width="6" :show-text="false"/>
     </div>
     <div class="network-flow">
@@ -73,12 +74,7 @@ const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复�
 </template>
 
 <style scoped>
-:deep(.el-progress-bar__inner){
-  background-color: #18cb18;
-}
-:deep(.el-progress-bar__outer){
-  background-color: #18cb1823;
-}
+
 .dark .instance-card {
   color: #d9d9d9
 }
@@ -96,7 +92,13 @@ const copyIp = () =>{copy(props.data.ip).then(()=>{ElMessage.success('成功复�
   background-color: var(--el-bg-color);
   border-radius: 5px;
   box-sizing: border-box;
+  color: #606060;
+  transition: .1s;
 
+  &:hover {
+    cursor: pointer;
+    scale: 1.02;
+  }
   .name {
     font-size: 15px;
     font-weight: bold;

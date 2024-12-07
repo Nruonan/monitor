@@ -1,3 +1,6 @@
+import {useClipboard} from "@vueuse/core";
+import {ElMessage} from "element-plus";
+
 function fitByUnit(value, unit) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
   let index = units.indexOf(unit)
@@ -13,4 +16,14 @@ function fitByUnit(value, unit) {
   return `${parseInt(value)} ${units[index]}`
 }
 
-export { fitByUnit }
+function percentageToStatus(percentage){
+  if (percentage < 50)
+    return 'success'
+  else if (percentage < 80)
+    return 'warning'
+  else return 'exception'
+}
+
+const { copy } = useClipboard()
+const copyIp = ip => copy(ip).then(() => ElMessage.success('成功复制IP地址到剪贴板'))
+export { fitByUnit,percentageToStatus, copyIp }

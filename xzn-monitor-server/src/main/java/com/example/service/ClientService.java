@@ -5,6 +5,7 @@ import com.example.entity.dto.ClientDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface ClientService extends IService<ClientDO> {
     void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam);
     List<ClientPreviewRespDTO> listAllClient();
     void renameClient(RenameClientReqDTO requestParam);
+    ClientDetailsRespDTO clientDetails(int id);
 }

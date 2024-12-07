@@ -10,6 +10,7 @@ import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
@@ -123,7 +124,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
                 // 获取当前缓存中的客户端运行时信息
                 RuntimeDetailDO runtime = currentRuntime.get(clientDO.getId());
                 // 如果运行时信息存在且时间戳在60秒内，将其信息复制到DTO对象中
-                if (runtime != null && System.currentTimeMillis() - runtime.getTimestamp() < 60 * 1000){
+                if (isOline(runtime)){
                     BeanUtil.copyProperties(runtime,bean);
                     // 设置在线
                     bean.setOnline(true);
@@ -132,14 +133,31 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         }).toList();
     }
 
+    /**
+     * 重命名客户端
+     * @param requestParam 包含要更新的客户端ID和新名称的请求对象
+     */
     @Override
     public void renameClient(RenameClientReqDTO requestParam) {
+        // 更新客户端名称
         this.update(Wrappers.lambdaUpdate(ClientDO.class)
             .eq(ClientDO::getId,requestParam.getId())
             .set(ClientDO::getName,requestParam.getName()));
+        // 重新初始化配置
         this.init();
     }
 
+    @Override
+    public ClientDetailsRespDTO clientDetails(int id) {
+        ClientDO clientDO = this.clientCache.get(id);
+        ClientDetailsRespDTO dto = BeanUtil.toBean(clientDO, ClientDetailsRespDTO.class);
+        BeanUtil.copyProperties(detailMapper.selectById(id),dto);
+        dto.setOnline(this.isOline(currentRuntime.get(id)));
+        return dto;
+    }
+    private boolean isOline(RuntimeDetailDO runtime){
+        return runtime != null && System.currentTimeMillis() - runtime.getTimestamp() < 60 * 1000;
+    }
     @Override
     public ClientDO findClientByToken(String token) {
         return clientTokenCache.get(token);
@@ -150,7 +168,12 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         return clientCache.get(id);
     }
 
+    /**
+     * 将客户端信息添加到缓存中
+     * @param client 要添加到缓存中的客户端信息，包括客户端的ID和Token等关键数据
+     */
     private void addClientCache(ClientDO client){
+        // 将客户端信息根据其ID添加到缓存中
         clientCache.put(client.getId(), client);
         clientTokenCache.put(client.getToken(), client);
     }
