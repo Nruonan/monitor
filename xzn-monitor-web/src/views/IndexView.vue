@@ -51,7 +51,7 @@ const route = useRoute()
 
 const isDark = useDark()
 const tabs =[
-  {id : 1, name: '管理', route: '管理'},
+  {id : 1, name: '管理', route: 'manage'},
   {id : 2, name: '安全', route: 'security'}
 ]
 const defaultIndex = () =>{
