@@ -2,11 +2,13 @@ package com.example.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.dto.ClientDetailDO;
 import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
+import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.mapper.ClientDetailMapper;
@@ -131,6 +133,14 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     }
 
     @Override
+    public void renameClient(RenameClientReqDTO requestParam) {
+        this.update(Wrappers.lambdaUpdate(ClientDO.class)
+            .eq(ClientDO::getId,requestParam.getId())
+            .set(ClientDO::getName,requestParam.getName()));
+        this.init();
+    }
+
+    @Override
     public ClientDO findClientByToken(String token) {
         return clientTokenCache.get(token);
     }
@@ -154,7 +164,6 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         for (int i = 0; i < 24; i++) {
             sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
-        System.out.println(sb);
         return sb.toString();
     }
 }
