@@ -74,7 +74,7 @@ public class MonitorUtils {
                  .memoryUsage(memory)
                  .diskUsage(disk)
                  .networkDownload(download / 1024)
-                 .networkUsage(upload / 1024)
+                 .networkUpload(upload / 1024)
                  .diskRead(read / 1024 / 1024)
                  .diskWrite(write / 1024 / 1024)
                  .timestamp(new Date().getTime())
