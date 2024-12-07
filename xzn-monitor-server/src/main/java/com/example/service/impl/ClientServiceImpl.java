@@ -13,9 +13,11 @@ import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
+import com.example.entity.vo.response.RuntimeDetailsRespDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
 import com.example.service.ClientService;
+import com.example.utils.InfluxDbUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.security.SecureRandom;
@@ -33,13 +35,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> implements ClientService {
 
-    @Resource
-    ClientDetailMapper detailMapper;
     private String registerToken = this.generateNewToken();
     // 多线程map 保存数据
     private final Map<Integer, ClientDO> clientCache = new ConcurrentHashMap<>();
     private final Map<String, ClientDO> clientTokenCache = new ConcurrentHashMap<>();
+    @Resource
+    ClientDetailMapper detailMapper;
 
+    @Resource
+    InfluxDbUtils influxDbUtils;
     @PostConstruct
     public void init() {
         this.list().forEach(this::addClientCache);
@@ -98,12 +102,13 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
             detailMapper.insert(clientDetailDO);
         }
     }
-    private Map<Integer, RuntimeDetailDO> currentRuntime = new ConcurrentHashMap<>();
+    private final Map<Integer, RuntimeDetailReqDTO> currentRuntime = new ConcurrentHashMap<>();
     @Override
     public void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam) {
-        RuntimeDetailDO bean = BeanUtil.toBean(requestParam, RuntimeDetailDO.class);
-        currentRuntime.put(client.getId(),bean);
+        currentRuntime.put(client.getId(),requestParam);
+        influxDbUtils.writeRuntimeData(client.getId(), requestParam);
     }
+
 
     /**
      * 列出所有客户端详细信息
@@ -121,7 +126,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
                 // 从数据库中获取客户端详细信息并复制到DTO对象中
                 BeanUtil.copyProperties(detailMapper.selectById(clientDO.getId()),bean);
                 // 获取当前缓存中的客户端运行时信息
-                RuntimeDetailDO runtime = currentRuntime.get(clientDO.getId());
+                RuntimeDetailReqDTO runtime = currentRuntime.get(clientDO.getId());
                 // 如果运行时信息存在且时间戳在60秒内，将其信息复制到DTO对象中
                 if (isOline(runtime)){
                     BeanUtil.copyProperties(runtime,bean);
@@ -146,6 +151,11 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         this.init();
     }
 
+    /**
+     * 重命名节点
+     * 
+     * @param requestParam 包含节点新名称和位置信息的请求参数对象
+     */
     @Override
     public void renameNode(RenameNodeReqDTO requestParam) {
         // 更新客户端名称
@@ -157,15 +167,37 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         this.init();
     }
 
+    /**
+     * 根据客户端ID获取客户端详细信息
+     * 
+     * @param id 客户端ID，用于识别特定的客户端
+     * @return ClientDetailsRespDTO 包含客户端详细信息和在线状态的响应对象
+     */
     @Override
     public ClientDetailsRespDTO clientDetails(int id) {
+        // 从缓存中获取客户端数据对象
         ClientDO clientDO = this.clientCache.get(id);
+        // 将ClientDO转换为ClientDetailsRespDTO对象
         ClientDetailsRespDTO dto = BeanUtil.toBean(clientDO, ClientDetailsRespDTO.class);
+        // 从数据库中获取客户端详细信息，并复制到DTO中
         BeanUtil.copyProperties(detailMapper.selectById(id),dto);
+        // 设置客户端的在线状态
         dto.setOnline(this.isOline(currentRuntime.get(id)));
+        // 返回填充完毕的客户端详细信息响应DTO
         return dto;
     }
-    private boolean isOline(RuntimeDetailDO runtime){
+
+    @Override
+    public RuntimeDetailsRespDTO clientRuntimeDetailsHistory(int clientId) {
+        return null;
+    }
+
+    @Override
+    public RuntimeDetailsRespDTO clientRuntimeDetailsNow(int clientId) {
+        return null;
+    }
+
+    private boolean isOline(RuntimeDetailReqDTO runtime){
         return runtime != null && System.currentTimeMillis() - runtime.getTimestamp() < 60 * 1000;
     }
     @Override
