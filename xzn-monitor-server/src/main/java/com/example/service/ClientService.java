@@ -8,7 +8,8 @@ import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
-import com.example.entity.vo.response.RuntimeDetailsRespDTO;
+import com.example.entity.vo.response.RuntimeDetailRespDTO;
+import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import java.util.List;
 
 /**
@@ -26,6 +27,6 @@ public interface ClientService extends IService<ClientDO> {
     void renameClient(RenameClientReqDTO requestParam);
     void renameNode(RenameNodeReqDTO requestParam);
     ClientDetailsRespDTO clientDetails(int id);
-    RuntimeDetailsRespDTO clientRuntimeDetailsHistory(int clientId);
-    RuntimeDetailsRespDTO clientRuntimeDetailsNow(int clientId);
+    RuntimeHistoryRespDTO clientRuntimeDetailsHistory(int clientId);
+    RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId);
 }

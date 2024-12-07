@@ -6,14 +6,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.dto.ClientDetailDO;
-import com.example.entity.dto.RuntimeDetailDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
-import com.example.entity.vo.response.RuntimeDetailsRespDTO;
+import com.example.entity.vo.response.RuntimeDetailRespDTO;
+import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
 import com.example.service.ClientService;
@@ -187,14 +187,31 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         return dto;
     }
 
+    /**
+     * 获取客户端的运行历史记录详细信息
+     * 
+     * @param clientId 客户端ID，用于查询运行历史记录和客户端详细信息
+     * @return RuntimeHistoryRespDTO 包含客户端运行历史记录和详细信息的对象
+     */
     @Override
-    public RuntimeDetailsRespDTO clientRuntimeDetailsHistory(int clientId) {
-        return null;
+    public RuntimeHistoryRespDTO clientRuntimeDetailsHistory(int clientId) {
+        // 从InfluxDB中读取客户端的运行历史记录
+        RuntimeHistoryRespDTO dto = influxDbUtils.readRuntimeHistory(clientId);
+        // 通过客户端ID从数据库中查询客户端的详细信息
+        ClientDetailDO clientDetailDO = detailMapper.selectById(clientId);
+        // 将客户端详细信息复制到运行历史记录DTO中，以便统一返回
+        BeanUtil.copyProperties(clientDetailDO,dto);
+        return dto;
     }
 
+    /**
+     * 获取客户端当前运行时详细信息
+     * @param clientId 客户端唯一标识符，用于区分不同的客户端
+     * @return RuntimeHistoryRespDTO 包含客户端当前运行时详细信息的数据传输对象
+     */
     @Override
-    public RuntimeDetailsRespDTO clientRuntimeDetailsNow(int clientId) {
-        return null;
+    public RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId) {
+        return BeanUtil.toBean(currentRuntime.get(clientId), RuntimeDetailRespDTO.class);
     }
 
     private boolean isOline(RuntimeDetailReqDTO runtime){

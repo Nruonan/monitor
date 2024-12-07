@@ -1,16 +1,13 @@
-package com.example.entity.dto;
+package com.example.entity.vo.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 /**
  * @author Nruonan
+ * @description
  */
 @Data
-@Builder
-@AllArgsConstructor
-public class RuntimeDetailDO {
+public class RuntimeDetailRespDTO {
     long timestamp;
     double cpuUsage;
     double memoryUsage;

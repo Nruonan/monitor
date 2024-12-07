@@ -24,3 +24,9 @@ export function getClientDetails(id,details){
     Object.assign(details.base,data)
   })
 }
+
+export function getClientHistory(id,details){
+  return get(`/api/monitor/runtime-history?clientId=${id}`,data=>{
+    Object.assign(details.runtime,data)
+  })
+}

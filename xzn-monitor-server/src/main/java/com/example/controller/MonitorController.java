@@ -5,7 +5,8 @@ import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
-import com.example.entity.vo.response.RuntimeDetailsRespDTO;
+import com.example.entity.vo.response.RuntimeDetailRespDTO;
+import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import com.example.service.ClientService;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -47,12 +48,12 @@ public class MonitorController {
     }
 
     @GetMapping("/runtime-history")
-    public RestBean<RuntimeDetailsRespDTO> runtimeDetailsHistory(@RequestParam("clientId") int clientId){
+    public RestBean<RuntimeHistoryRespDTO> runtimeDetailsHistory(@RequestParam("clientId") int clientId){
         return RestBean.success(service.clientRuntimeDetailsHistory(clientId));
     }
 
     @GetMapping("/runtime-now")
-    public RestBean<RuntimeDetailsRespDTO> runtimeDetailsNow(@RequestParam("clientId") int clientId){
+    public RestBean<RuntimeDetailRespDTO> runtimeDetailsNow(@RequestParam("clientId") int clientId){
         return RestBean.success(service.clientRuntimeDetailsNow(clientId));
     }
 }

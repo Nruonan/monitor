@@ -16,7 +16,7 @@ public class RuntimeDetailReqDTO {
     double cpuUsage;
     double memoryUsage;
     double diskUsage;
-    double networkUsage;
+    double networkUpload;
     double networkDownload;
     double diskRead;
     double diskWrite;

@@ -10,7 +10,7 @@ import lombok.Data;
  * @description
  */
 @Data
-public class RuntimeDetailsRespDTO {
+public class RuntimeHistoryRespDTO {
     double disk;
     double memory;
     List<JSONObject> list = new LinkedList<>();
