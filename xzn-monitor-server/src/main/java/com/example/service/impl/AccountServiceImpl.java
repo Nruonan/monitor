@@ -1,12 +1,16 @@
 package com.example.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.AccountDO;
 import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
+import com.example.entity.vo.request.CreateSubAccountReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
+import com.example.entity.vo.response.SubAccountRespDTO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -15,6 +19,8 @@ import com.example.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +76,47 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
             .set(AccountDO::getPassword, passwordEncoder.encode(requestParam.getNewPassword())));
         return update;
     }
+
+    @Override
+    public void createSubAccount(CreateSubAccountReqDTO requestParam) {
+        AccountDO account = this.findAccountByNameOrEmail(requestParam.getEmail());
+        if (account != null){
+            throw new IllegalArgumentException("该电子邮件已被注册");
+        }
+        account = this.findAccountByNameOrEmail(requestParam.getUsername());
+        if (account != null){
+            throw new IllegalArgumentException("该用户名已被注册");
+        }
+        account = new AccountDO(null, requestParam.getUsername(),
+            passwordEncoder.encode(requestParam.getPassword()), requestParam.getEmail(), Const.ROLE_NORMAL,
+            JSONArray.copyOf(requestParam.getClients()).toJSONString(), new Date());
+        this.save(account);
+    }
+
+    @Override
+    public void deleteSubAccount(int id) {
+        this.removeById(id);
+    }
+    /**
+     * 获取子账户列表
+     * @return 子账户响应数据对象列表
+     */
+    @Override
+    public List<SubAccountRespDTO> subAccountList() {
+        // 查询角色为普通用户的账户列表，并转换为SubAccountRespDTO对象列表
+        // 通过lambda表达式和流操作处理查询结果，确保只选择符合条件的账户
+        // 使用BeanUtil进行对象类型转换，简化代码并提高可读性
+        // 解析账户中的客户信息，使用JSONArray进行解析，将字符串转换为列表
+        return this.list(Wrappers.lambdaQuery(AccountDO.class)
+            .eq(AccountDO::getRole,Const.ROLE_NORMAL))
+            .stream().map(account ->{
+                SubAccountRespDTO bean = BeanUtil.toBean(account, SubAccountRespDTO.class);
+                bean.setClientList(JSONArray.parse(account.getClients()));
+                return bean;
+            }).toList();
+    }
+
+
 
     /**
      * 从数据库中通过用户名或邮箱查找用户详细信息

@@ -12,6 +12,7 @@ import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
+import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import com.example.mapper.ClientDetailMapper;
@@ -125,7 +126,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     public List<ClientPreviewRespDTO> listAllClient() {
         return clientCache.values().stream().map(clientDO ->{
                 // 将客户端信息转换为ClientDetailReqDTO对象
-            ClientPreviewRespDTO bean = BeanUtil.toBean(clientDO, ClientPreviewRespDTO.class);
+                ClientPreviewRespDTO bean = BeanUtil.toBean(clientDO, ClientPreviewRespDTO.class);
                 // 从数据库中获取客户端详细信息并复制到DTO对象中
                 BeanUtil.copyProperties(detailMapper.selectById(clientDO.getId()),bean);
                 // 获取当前缓存中的客户端运行时信息
@@ -137,6 +138,17 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
                     bean.setOnline(true);
                 }
                 return bean;
+        }).toList();
+    }
+
+    @Override
+    public List<ClientSimpleRespDTO> simpleClientList() {
+        return clientCache.values().stream().map(client ->{
+            // 将客户端信息转换为ClientDetailReqDTO对象
+            ClientSimpleRespDTO bean = BeanUtil.toBean(client, ClientSimpleRespDTO.class);
+            // 从数据库中获取客户端详细信息并复制到DTO对象中
+            BeanUtil.copyProperties(detailMapper.selectById(client.getId()),bean);
+            return bean;
         }).toList();
     }
 

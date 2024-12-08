@@ -8,6 +8,7 @@ import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
+import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import java.util.List;
@@ -24,10 +25,13 @@ public interface ClientService extends IService<ClientDO> {
     void updateClientDetail(ClientDO client, ClientDetailReqDTO requestParam);
     void updateRuntimeDetails(ClientDO client, RuntimeDetailReqDTO requestParam);
     List<ClientPreviewRespDTO> listAllClient();
+
+    List<ClientSimpleRespDTO> simpleClientList();
     void renameClient(RenameClientReqDTO requestParam);
     void renameNode(RenameNodeReqDTO requestParam);
     ClientDetailsRespDTO clientDetails(int id);
     RuntimeHistoryRespDTO clientRuntimeDetailsHistory(int clientId);
     RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId);
     void deleteClient(int clientId);
+
 }

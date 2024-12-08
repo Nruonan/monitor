@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.entity.dto.AccountDO;
 import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
+import com.example.entity.vo.request.CreateSubAccountReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
+import com.example.entity.vo.response.SubAccountRespDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AccountService extends IService<AccountDO>, UserDetailsService {
@@ -18,4 +21,10 @@ public interface AccountService extends IService<AccountDO>, UserDetailsService 
     Boolean logout(HttpServletRequest request, HttpServletResponse response);
 
     boolean changePassword(int id, ChangePasswordReqDTO requestParam);
+
+    void createSubAccount(CreateSubAccountReqDTO requestParam);
+
+    List<SubAccountRespDTO> subAccountList();
+
+    void deleteSubAccount(int id);
 }

@@ -5,6 +5,7 @@ import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
+import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
 import com.example.service.ClientService;
@@ -30,6 +31,10 @@ public class MonitorController {
     @GetMapping("/list")
     public RestBean<List<ClientPreviewRespDTO>> listAllClient(){
         return RestBean.success(service.listAllClient());
+    }
+    @GetMapping("/simple-list")
+    public RestBean<List<ClientSimpleRespDTO>> simpleClientList(){
+        return RestBean.success(service.simpleClientList());
     }
 
     @PostMapping("/rename")

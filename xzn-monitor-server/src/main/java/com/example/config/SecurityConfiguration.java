@@ -57,29 +57,30 @@ public class SecurityConfiguration{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(conf -> conf
-                        .requestMatchers("/api/auth/**", "/error").permitAll()
-                        .requestMatchers("/monitor/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().hasAnyRole(Const.ROLE_DEFAULT)
-                )
-                .formLogin(conf -> conf
-                        .loginProcessingUrl("/api/auth/login")
-                        .failureHandler(this::handleProcess)
-                        .successHandler(this::handleProcess)
-                        .permitAll()
-                )
-                .logout(AbstractHttpConfigurer::disable)
-                .exceptionHandling(conf -> conf
-                        .accessDeniedHandler(this::handleProcess)
-                        .authenticationEntryPoint(this::handleProcess)
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(conf -> conf
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(requestLogFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, RequestLogFilter.class)
-                .build();
+            .authorizeHttpRequests(conf -> conf
+                .requestMatchers("/api/auth/**", "/error").permitAll()
+                .requestMatchers("/monitor/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/api/user/sub/**").hasRole(Const.ROLE_ADMIN)
+                .anyRequest().hasAnyRole(Const.ROLE_ADMIN, Const.ROLE_NORMAL)
+            )
+            .formLogin(conf -> conf
+                .loginProcessingUrl("/api/auth/login")
+                .failureHandler(this::handleProcess)
+                .successHandler(this::handleProcess)
+                .permitAll()
+            )
+            .logout(AbstractHttpConfigurer::disable)
+            .exceptionHandling(conf -> conf
+                .accessDeniedHandler(this::handleProcess)
+                .authenticationEntryPoint(this::handleProcess)
+            )
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(conf -> conf
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(requestLogFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter, RequestLogFilter.class)
+            .build();
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

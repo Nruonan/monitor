@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 数据库中的用户信息
+ * @author Nruonan
  */
 @Data
 @TableName("db_account")
@@ -22,5 +23,6 @@ public class AccountDO implements BaseData {
     String password;
     String email;
     String role;
+    String clients;
     Date registerTime;
 }
