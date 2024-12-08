@@ -55,7 +55,6 @@ public class MonitorUtils {
              CentralProcessor processor = hardware.getProcessor();
              double upload = ni.getBytesSent();
              double download = ni.getBytesRecv();
-             System.out.println(download);
              double read = hardware.getDiskStores().stream().mapToLong(HWDiskStore::getReadBytes).sum();
              double write = hardware.getDiskStores().stream().mapToLong(HWDiskStore::getWriteBytes).sum();
              long[] systemCpuLoadTicks = processor.getSystemCpuLoadTicks();
@@ -63,7 +62,6 @@ public class MonitorUtils {
              ni = Objects.requireNonNull(this.findNetworkInterface(hardware));
              upload = (ni.getBytesSent() - upload) / statisticTime;
              download = (ni.getBytesRecv() - download) / statisticTime;
-             System.out.println(download);
              read = (hardware.getDiskStores().stream().mapToLong(HWDiskStore::getReadBytes).sum() - read) / statisticTime;
              write = (hardware.getDiskStores().stream().mapToLong(HWDiskStore::getWriteBytes).sum() - write) / statisticTime;
              double memory = (hardware.getMemory().getTotal() - hardware.getMemory().getAvailable()) / 1024.0 / 1024 / 1024;
