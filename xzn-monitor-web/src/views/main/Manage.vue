@@ -6,6 +6,8 @@ import ClientDetails from "@/components/ClientDetails.vue";
 import RegisterCard from "@/components/RegisterCard.vue";
 import {refreshToken} from "@/method/client";
 import {useRoute} from "vue-router";
+import {useStore} from "@/store";
+const store = useStore()
 const route = useRoute()
 const locations = [
   {name: 'cn', desc: '中国大陆'},
@@ -63,7 +65,8 @@ const register = reactive({
         </div>
       </div>
       <div>
-        <el-button :icon="Plus" type="primary" plain @click="register.show = true">添加新主机</el-button>
+        <el-button :icon="Plus" type="primary" plain :disabled="!store.isAdmin"
+                   @click="register.show = true" >添加新主机</el-button>
       </div>
     </div>
 

@@ -12,5 +12,6 @@ public class AuthorizeRespDTO {
     String username;
     String role;
     String token;
+    String email;
     Date expire;
 }

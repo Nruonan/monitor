@@ -36,3 +36,11 @@ export function refreshToken(register){
     register.token = token
   })
 }
+export function onCheck(checkedClients,state, id){
+  if (state){
+    checkedClients.push(id)
+  }else{
+    const index = checkdedClients.indexOf(id)
+    checkedClients.splice(index,1)
+  }
+}
