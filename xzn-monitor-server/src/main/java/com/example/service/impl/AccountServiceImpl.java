@@ -1,8 +1,10 @@
 package com.example.service.impl;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.AccountDO;
+import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
 import com.example.mapper.AccountMapper;
@@ -56,6 +58,17 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean changePassword(int id, ChangePasswordReqDTO requestParam) {
+        AccountDO account = this.getById(id);
+        String password = account.getPassword();
+        if (!passwordEncoder.matches(requestParam.getPassword(),password))return false;
+        boolean update = this.update(Wrappers.lambdaUpdate(AccountDO.class)
+            .eq(AccountDO::getId, id)
+            .set(AccountDO::getPassword, passwordEncoder.encode(requestParam.getNewPassword())));
+        return update;
     }
 
     /**

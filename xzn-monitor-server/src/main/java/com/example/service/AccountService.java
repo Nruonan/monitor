@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.entity.dto.AccountDO;
+import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,4 +16,6 @@ public interface AccountService extends IService<AccountDO>, UserDetailsService 
     String resetConfirm(ConfirmResetReqDTO info);
 
     Boolean logout(HttpServletRequest request, HttpServletResponse response);
+
+    boolean changePassword(int id, ChangePasswordReqDTO requestParam);
 }
