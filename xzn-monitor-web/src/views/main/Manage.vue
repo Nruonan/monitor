@@ -5,7 +5,8 @@ import {get} from "@/net";
 import ClientDetails from "@/components/ClientDetails.vue";
 import RegisterCard from "@/components/RegisterCard.vue";
 import {refreshToken} from "@/method/client";
-
+import {useRoute} from "vue-router";
+const route = useRoute()
 const locations = [
   {name: 'cn', desc: '中国大陆'},
   {name: 'hk', desc: '香港'},
@@ -19,9 +20,12 @@ const checkedNodes = ref([])
 
 const list = ref([])
 const updateList = () =>{
-  get('/api/monitor/list',(data) =>{
-    list.value = data
-  })
+  if (route.name === 'manage'){
+    get('/api/monitor/list',(data) =>{
+      list.value = data
+    })
+  }
+
 }
 setInterval(updateList,10000)
 updateList()
