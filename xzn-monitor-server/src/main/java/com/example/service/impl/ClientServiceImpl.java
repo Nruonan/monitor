@@ -46,6 +46,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     InfluxDbUtils influxDbUtils;
     @PostConstruct
     public void init() {
+        // 初始化客户端缓存
         this.list().forEach(this::addClientCache);
     }
     @Override
