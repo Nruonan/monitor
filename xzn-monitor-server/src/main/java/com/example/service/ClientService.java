@@ -29,4 +29,5 @@ public interface ClientService extends IService<ClientDO> {
     ClientDetailsRespDTO clientDetails(int id);
     RuntimeHistoryRespDTO clientRuntimeDetailsHistory(int clientId);
     RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId);
+    void deleteClient(int clientId);
 }

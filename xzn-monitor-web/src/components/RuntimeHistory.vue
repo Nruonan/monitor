@@ -32,8 +32,8 @@ function updateNetworkUsage(list){
   ]
   const option = defaultOption('网络(KB/S)',localTimeLine(list))
   doubleSeries(option, ['上传(KB/s)','下载(KB/s)'], data, [
-    [ '#c6c6ee','#5555f1','#4c4747'],
-    [ '#f1ee61','#ffe300','#5f4f00']
+    ['#f6b66e', '#ffd29c', '#fddfc033'],
+    ['#79c7ff', '#3cabf3', 'rgba(192,242,253,0.2)']
   ])
   chart.setOption(option)
 }

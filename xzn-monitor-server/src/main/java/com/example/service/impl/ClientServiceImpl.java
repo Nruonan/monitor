@@ -47,6 +47,8 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     @PostConstruct
     public void init() {
         // 初始化客户端缓存
+        clientCache.clear();
+        clientTokenCache.clear();
         this.list().forEach(this::addClientCache);
     }
     @Override
@@ -70,7 +72,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
             // 尝试保存客户端对象到数据库或持久化存储
             if (this.save(client)) {
                 // 保存成功后，更新注册令牌以备下次注册
-                registerToken = this.registerToken();
+                registerToken = this.generateNewToken();
                 // 将新客户端对象添加到缓存中，以便快速访问
                 this.addClientCache(client);
                 // 注册成功，返回true
@@ -178,6 +180,7 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     public ClientDetailsRespDTO clientDetails(int id) {
         // 从缓存中获取客户端数据对象
         ClientDO clientDO = this.clientCache.get(id);
+        if (clientDO == null)return null;
         // 将ClientDO转换为ClientDetailsRespDTO对象
         ClientDetailsRespDTO dto = BeanUtil.toBean(clientDO, ClientDetailsRespDTO.class);
         // 从数据库中获取客户端详细信息，并复制到DTO中
@@ -213,6 +216,23 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     @Override
     public RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId) {
         return BeanUtil.toBean(currentRuntime.get(clientId), RuntimeDetailRespDTO.class);
+    }
+
+    /**
+     * 根据客户端ID删除客户端信息及其相关详情，并重新初始化当前状态
+     * 
+     * @param clientId 客户端ID，用于标识特定的客户端
+     */
+    @Override
+    public void deleteClient(int clientId) {
+        // 从当前实体中按ID删除客户端信息
+        this.removeById(clientId);
+        // 删除客户端详情信息
+        detailMapper.deleteById(clientId);
+        // 重新初始化当前实体，以确保数据一致性
+        this.init();
+        // 从当前运行时环境中移除与该客户端ID相关的记录
+        currentRuntime.remove(clientId);
     }
 
     private boolean isOline(RuntimeDetailReqDTO runtime){

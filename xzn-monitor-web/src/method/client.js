@@ -30,3 +30,9 @@ export function getClientHistory(id,details){
     Object.assign(details.runtime,data)
   })
 }
+
+export function refreshToken(register){
+  return get('/api/monitor/register',token => {
+    register.token = token
+  })
+}
