@@ -1,9 +1,9 @@
 package com.example.controller;
 
 import com.example.entity.RestBean;
-import com.example.entity.dto.AccountDO;
 import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.CreateSubAccountReqDTO;
+import com.example.entity.vo.request.ModifyEmailReqDTO;
 import com.example.entity.vo.response.SubAccountRespDTO;
 import com.example.service.AccountService;
 import com.example.utils.Const;
@@ -33,7 +33,16 @@ public class UserController {
             @RequestAttribute(Const.ATTR_USER_ID) int id){
         return service.changePassword(id, requestParam) ? RestBean.success(): RestBean.failure(401,"输入原密码错误");
     }
+    @PostMapping("/modify-email")
+    public RestBean<Void> modifyEmail(@RequestAttribute(Const.ATTR_USER_ID) int id, @RequestBody ModifyEmailReqDTO requestParam){
+        String s = service.modifyEmail(id, requestParam);
+        if (s == null){
+            return RestBean.success();
+        }else{
+            return RestBean.failure(401,s);
+        }
 
+    }
     @PostMapping("/sub/create")
     public RestBean<Void> createSubAccount(@RequestBody() @Valid CreateSubAccountReqDTO requestParam){
         service.createSubAccount(requestParam);

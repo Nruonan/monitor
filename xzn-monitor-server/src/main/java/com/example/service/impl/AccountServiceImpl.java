@@ -10,6 +10,7 @@ import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
 import com.example.entity.vo.request.CreateSubAccountReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
+import com.example.entity.vo.request.ModifyEmailReqDTO;
 import com.example.entity.vo.response.SubAccountRespDTO;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
@@ -97,6 +98,21 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, AccountDO> im
     public void deleteSubAccount(int id) {
         this.removeById(id);
     }
+
+    @Override
+    public String modifyEmail(int id,ModifyEmailReqDTO requestParam) {
+        String code = getEmailVerifyCode(requestParam.getEmail());
+        if (code == null)return "请先获取验证码";
+        if(!code.equals(requestParam.getCode()))return "验证码错误，请重新输入";
+        this.deleteEmailVerifyCode(requestParam.getEmail());
+        AccountDO account = this.findAccountByNameOrEmail(requestParam.getEmail());
+        if (account != null && account.getId() != id)return "该电子邮件已被注册";
+        this.update(Wrappers.lambdaUpdate(AccountDO.class)
+            .eq(AccountDO::getEmail,requestParam.getEmail())
+            .set(AccountDO::getEmail,requestParam.getEmail()));
+        return null;
+    }
+
     /**
      * 获取子账户列表
      * @return 子账户响应数据对象列表

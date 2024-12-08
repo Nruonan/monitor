@@ -6,6 +6,7 @@ import com.example.entity.vo.request.ChangePasswordReqDTO;
 import com.example.entity.vo.request.ConfirmResetReqDTO;
 import com.example.entity.vo.request.CreateSubAccountReqDTO;
 import com.example.entity.vo.request.EmailResetReqDTO;
+import com.example.entity.vo.request.ModifyEmailReqDTO;
 import com.example.entity.vo.response.SubAccountRespDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,4 +28,6 @@ public interface AccountService extends IService<AccountDO>, UserDetailsService 
     List<SubAccountRespDTO> subAccountList();
 
     void deleteSubAccount(int id);
+
+    String modifyEmail(int id,ModifyEmailReqDTO requestParam);
 }
