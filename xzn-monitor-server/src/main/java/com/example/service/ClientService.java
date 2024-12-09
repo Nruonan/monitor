@@ -6,11 +6,13 @@ import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.request.SshConnectionReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
+import com.example.entity.vo.response.SshSettingsRespDTO;
 import java.util.List;
 
 /**
@@ -33,5 +35,6 @@ public interface ClientService extends IService<ClientDO> {
     RuntimeHistoryRespDTO clientRuntimeDetailsHistory(int clientId);
     RuntimeDetailRespDTO clientRuntimeDetailsNow(int clientId);
     void deleteClient(int clientId);
-
+    SshSettingsRespDTO sshSettings(int clientId);
+    void saveSshConnection(SshConnectionReqDTO requestParam);
 }

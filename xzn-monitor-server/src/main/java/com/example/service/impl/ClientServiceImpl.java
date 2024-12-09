@@ -6,17 +6,21 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.entity.dto.ClientDO;
 import com.example.entity.dto.ClientDetailDO;
+import com.example.entity.dto.ClientSshDO;
 import com.example.entity.vo.request.ClientDetailReqDTO;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
 import com.example.entity.vo.request.RuntimeDetailReqDTO;
+import com.example.entity.vo.request.SshConnectionReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
+import com.example.entity.vo.response.SshSettingsRespDTO;
 import com.example.mapper.ClientDetailMapper;
 import com.example.mapper.ClientMapper;
+import com.example.mapper.ClientSshMapper;
 import com.example.service.ClientService;
 import com.example.utils.InfluxDbUtils;
 import jakarta.annotation.PostConstruct;
@@ -25,6 +29,7 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
@@ -42,7 +47,8 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
     private final Map<String, ClientDO> clientTokenCache = new ConcurrentHashMap<>();
     @Resource
     ClientDetailMapper detailMapper;
-
+    @Resource
+    ClientSshMapper sshMapper;
     @Resource
     InfluxDbUtils influxDbUtils;
     @PostConstruct
@@ -246,6 +252,58 @@ public class ClientServiceImpl extends ServiceImpl<ClientMapper, ClientDO> imple
         // 从当前运行时环境中移除与该客户端ID相关的记录
         currentRuntime.remove(clientId);
     }
+    /**
+     * 保存SSH连接信息
+     * 此方法用于处理SSH连接请求参数，将其转换为SSH连接数据对象，并根据情况更新或插入数据库
+     * 
+     * @param requestParam SSH连接请求参数，包含需要保存的SSH连接信息
+     */
+    @Override
+    public void saveSshConnection(SshConnectionReqDTO requestParam) {
+        // 从缓存中获取客户端信息
+        ClientDO client = clientCache.get(requestParam.getId());
+        // 如果客户端信息为空，则直接返回，不进行后续操作
+        if (client == null)return;
+    
+        // 将请求参数转换为SSH连接数据对象
+        ClientSshDO clientSshDO = BeanUtil.toBean(requestParam,ClientSshDO.class);
+    
+        // 检查数据库中是否已存在该SSH连接信息
+        if (Objects.nonNull(sshMapper.selectById(clientSshDO.getId()))){
+            // 如果存在，则更新数据库中的SSH连接信息
+            sshMapper.updateById(clientSshDO);
+        }else{
+            // 如果不存在，则将SSH连接信息插入数据库
+            sshMapper.insert(clientSshDO);
+        }
+    }
+
+    /**
+     * 根据客户端ID获取SSH设置信息
+     *
+     * @param clientId 客户端ID，用于查询客户端详细信息和SSH设置信息
+     * @return SshSettingsRespDTO 包含SSH设置信息的响应对象，包括客户端IP地址
+     */
+    @Override
+    public SshSettingsRespDTO sshSettings(int clientId) {
+        // 根据客户端ID获取客户端详细信息
+        ClientDetailDO clientDetailDO = detailMapper.selectById(clientId);
+        // 根据客户端ID获取SSH设置信息
+        ClientSshDO ssh = sshMapper.selectById(clientId);
+        SshSettingsRespDTO dto = null;
+        // 判断SSH设置信息是否存在
+        if (ssh == null){
+            // 如果不存在，创建一个新的SSH设置响应对象
+            dto = new SshSettingsRespDTO();
+        }else{
+            // 如果存在，将SSH设置信息转换为SSH设置响应对象
+            dto = BeanUtil.toBean(ssh, SshSettingsRespDTO.class);
+        }
+        // 设置客户端IP地址
+        dto.setIp(clientDetailDO.getIp());
+        return dto;
+    }
+
 
     private boolean isOline(RuntimeDetailReqDTO runtime){
         return runtime != null && System.currentTimeMillis() - runtime.getTimestamp() < 60 * 1000;

@@ -18,7 +18,7 @@ const props = defineProps({
   id: Number,
   update: Function
 })
-const emits = defineEmits(['delete'])
+const emits = defineEmits(['delete','terminal'])
 
 const details = reactive({
   base: {},
@@ -98,8 +98,12 @@ watch(() => props.id, init, { immediate: true })
             <i class="fa-solid fa-server"/>
             服务器信息
           </div>
-          <el-button :icon="Delete" type="danger" plain
-                     @click="deleteClient">删除此主机</el-button>
+          <div>
+            <el-button :icon="Connection" type="info" plain
+                       @click="emits('terminal',id)">SSH远程链接</el-button>
+            <el-button :icon="Delete" type="danger" plain
+                       @click="deleteClient">删除此主机</el-button>
+          </div>
         </div>
 
         <el-divider style="margin: 10px 0"/>

@@ -3,11 +3,13 @@ package com.example.controller;
 import com.example.entity.RestBean;
 import com.example.entity.vo.request.RenameClientReqDTO;
 import com.example.entity.vo.request.RenameNodeReqDTO;
+import com.example.entity.vo.request.SshConnectionReqDTO;
 import com.example.entity.vo.response.ClientDetailsRespDTO;
 import com.example.entity.vo.response.ClientPreviewRespDTO;
 import com.example.entity.vo.response.ClientSimpleRespDTO;
 import com.example.entity.vo.response.RuntimeDetailRespDTO;
 import com.example.entity.vo.response.RuntimeHistoryRespDTO;
+import com.example.entity.vo.response.SshSettingsRespDTO;
 import com.example.service.AccountService;
 import com.example.service.ClientService;
 import com.example.utils.Const;
@@ -130,6 +132,28 @@ public class MonitorController {
         if (this.isAdminAccount(userRole)){
             service.deleteClient(clientId);
             return RestBean.success();
+        }else{
+            return RestBean.failure(401,"权限不足无法访问");
+        }
+    }
+
+    @PostMapping("/ssh-save")
+    public RestBean<Void> saveSshConnection(@RequestAttribute(Const.ATTR_USER_ID) int userId,
+        @RequestAttribute(Const.ATTR_USER_ROLE) String userRole,
+        @RequestBody SshConnectionReqDTO requestParam){
+        if (this.permissionCheck(userId,userRole,requestParam.getId())){
+            service.saveSshConnection(requestParam);
+            return RestBean.success();
+        }else{
+            return RestBean.failure(401,"权限不足无法访问");
+        }
+    }
+
+    @GetMapping("/ssh")
+    public RestBean<SshSettingsRespDTO> sshSettings(@RequestAttribute(Const.ATTR_USER_ID) int userId,
+        @RequestAttribute(Const.ATTR_USER_ROLE) String userRole,@RequestParam("clientId")int clientId) {
+        if (this.permissionCheck(userId,userRole,clientId)){
+            return RestBean.success(service.sshSettings(clientId));
         }else{
             return RestBean.failure(401,"权限不足无法访问");
         }

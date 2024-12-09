@@ -7,6 +7,7 @@ import RegisterCard from "@/components/RegisterCard.vue";
 import {refreshToken} from "@/method/client";
 import {useRoute} from "vue-router";
 import {useStore} from "@/store";
+import TerminalWindow from "@/components/TerminalWindow.vue";
 const store = useStore()
 const route = useRoute()
 const locations = [
@@ -53,6 +54,16 @@ const register = reactive({
   show: false,
   token: ''
 })
+
+function openTerminal(id){
+  terminal.show = true
+  terminal.id = id
+  detail.show = false
+}
+const terminal = reactive({
+  show: false,
+  id: -1,
+})
 </script>
 
 <template>
@@ -87,11 +98,23 @@ const register = reactive({
     <el-empty description="还没有任何主机哦" v-else/>
     <el-drawer size="520" :show-close="false" v-model="detail.show"
                :with-header="false" v-if="list.length" @close="detail.id = -1">
-      <client-details :id="detail.id" :update="updateList" @delete="updateList"/>
+      <client-details :id="detail.id" :update="updateList" @delete="updateList" @terminal="openTerminal(detail.id)"/>
     </el-drawer>
     <el-drawer v-model="register.show" direction="btt" :with-header="false"
       style="width: 600px; margin: 10px auto;"  size="300" @open="refreshToken(register)">
       <register-card :token="register.token"/>
+    </el-drawer>
+    <el-drawer direction="btt" style="width: 800px;
+        margin: 10px auto;"  size="500" v-model="terminal.show" :close-on-click-modal="false">
+      <template #header>
+        <div>
+          <div style="font-size: 18px;color: dodgerblue;font-weight: bold;">SSH远程连接</div>
+          <div style="font-size: 14px">
+            远程连接的建立将由服务端完成，因此在内网环境下也可以正常使用。
+          </div>
+        </div>
+      </template>
+      <terminal-window :id="detail.id"/>
     </el-drawer>
   </div>
 </template>
