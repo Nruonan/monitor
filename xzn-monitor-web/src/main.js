@@ -11,7 +11,7 @@ import 'flag-icon-css/css/flag-icons.min.css'
 import '@/assets/element.less'
 import {createPinia} from "pinia";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-axios.defaults.baseURL = 'http://localhost:8081'
+axios.defaults.baseURL = 'http://localhost:8080'
 
 const app = createApp(App)
 app.use(Antd)
