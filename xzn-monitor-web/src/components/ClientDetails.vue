@@ -100,7 +100,7 @@ watch(() => props.id, init, { immediate: true })
           </div>
           <div>
             <el-button :icon="Connection" type="info" plain
-                       @click="emits('terminal',id)">SSH远程链接</el-button>
+                       @click="emits('terminal', id)">SSH远程链接</el-button>
             <el-button :icon="Delete" type="danger" plain
                        @click="deleteClient">删除此主机</el-button>
           </div>

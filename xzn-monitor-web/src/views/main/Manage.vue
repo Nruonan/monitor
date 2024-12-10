@@ -98,14 +98,15 @@ const terminal = reactive({
     <el-empty description="还没有任何主机哦" v-else/>
     <el-drawer size="520" :show-close="false" v-model="detail.show"
                :with-header="false" v-if="list.length" @close="detail.id = -1">
-      <client-details :id="detail.id" :update="updateList" @delete="updateList" @terminal="openTerminal(detail.id)"/>
+      <client-details :id="detail.id" :update="updateList" @delete="updateList" @terminal="openTerminal"/>
     </el-drawer>
     <el-drawer v-model="register.show" direction="btt" :with-header="false"
       style="width: 600px; margin: 10px auto;"  size="300" @open="refreshToken(register)">
       <register-card :token="register.token"/>
     </el-drawer>
     <el-drawer direction="btt" style="width: 800px;
-        margin: 10px auto;"  size="500" v-model="terminal.show" :close-on-click-modal="false">
+        margin: 10px auto;" @close="terminal.id= -1"
+               size="500" v-model="terminal.show" :close-on-click-modal="false">
       <template #header>
         <div>
           <div style="font-size: 18px;color: dodgerblue;font-weight: bold;">SSH远程连接</div>
@@ -114,7 +115,7 @@ const terminal = reactive({
           </div>
         </div>
       </template>
-      <terminal-window :id="detail.id"/>
+      <terminal-window :id="terminal.id"/>
     </el-drawer>
   </div>
 </template>
