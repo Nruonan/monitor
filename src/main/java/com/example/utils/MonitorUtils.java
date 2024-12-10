@@ -44,7 +44,7 @@ public class MonitorUtils {
             .cpuCore(hardware.getProcessor().getLogicalProcessorCount())
             .memory(memory)
             .disk(diskSize)
-            .ip("192.168.56.1")
+            .ip(ip)
             .build();
     }
     public RuntimeDetail monitorRuntimeDetail(){
